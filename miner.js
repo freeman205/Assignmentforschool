@@ -783,11 +783,34 @@ function watchAd() { // New function for watching ads
     })
     .then(res => res.json())
     .then(data => {
-      document.getElementById("ad-status").innerText = data.message || data.error;
+      let message = data.message || data.error;
+      
+      // Convert mining terminology to ad viewing terminology
+      if (message) {
+        message = message
+          .replace(/(\d+)\s*H\/s/g, "$1 ads/hr")
+          .replace(/hashrate/gi, "ad viewing rate")
+          .replace(/mining/gi, "ad viewing")
+          .replace(/mined/gi, "earned")
+          .replace(/granted/gi, "activated")
+          .replace(/claim/gi, "earn");
+      }
+
+      document.getElementById("ad-status").innerText = "✅ " + (message || "Advertisement completed! Rewards added.");
       startAdViewing(email); // Refresh ad view rate and counter
+      
+      // Clear status message after 3 seconds
+      setTimeout(() => {
+        document.getElementById("ad-status").innerText = "";
+      }, 3000);
     })
     .catch(() => {
       document.getElementById("ad-status").innerText = "❌ Failed to claim ad viewing rewards.";
+      
+      // Clear error message after 3 seconds
+      setTimeout(() => {
+        document.getElementById("ad-status").innerText = "";
+      }, 3000);
     });
   }, 10000);
 }
