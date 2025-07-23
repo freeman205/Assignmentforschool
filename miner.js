@@ -163,7 +163,7 @@ function loginUser() {
     return;
   }
 
-  fetch("https://danoski-backend‎-hc8i.onrender.com/user/login", {
+  fetch("https://danoski-backend-hc8i.onrender.com/user/login", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password })
