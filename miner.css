@@ -256,7 +256,7 @@ small {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: var(--spacing-8) 0;
+  padding: var(--spacing-4) 0;
 }
 
 .auth-wrapper {
@@ -277,33 +277,33 @@ small {
   flex: 1;
   background: linear-gradient(135deg, var(--color-primary-dark), var(--color-primary));
   color: white;
-  padding: var(--spacing-12);
+  padding: var(--spacing-6);
   display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
 .auth-title {
-  font-size: 2.5rem;
+  font-size: 2rem;
   font-weight: 700;
-  margin-bottom: var(--spacing-4);
+  margin-bottom: var(--spacing-2);
 }
 
 .auth-subtitle {
-  font-size: 1.125rem;
-  margin-bottom: var(--spacing-8);
+  font-size: 1rem;
+  margin-bottom: var(--spacing-4);
   opacity: 0.9;
 }
 
 .auth-features {
-  margin-top: var(--spacing-8);
+  margin-top: var(--spacing-4);
 }
 
 .feature-item {
   display: flex;
   align-items: center;
-  gap: var(--spacing-3);
-  margin-bottom: var(--spacing-4);
+  gap: var(--spacing-2);
+  margin-bottom: var(--spacing-2);
 }
 
 .feature-icon {
