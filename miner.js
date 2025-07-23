@@ -307,7 +307,7 @@ function sendForgotOtp() {
     return;
   }
 
-  fetch("https://danoski-backend‎-hc8i.onrender.com/user/forgot-password", {
+  fetch("https://danoski-backend-hc8i.onrender.com/user/forgot-password", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email })
