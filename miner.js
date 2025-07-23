@@ -93,7 +93,7 @@ function signupUser() {
   sessionStorage.setItem("password", password);
 
   // Send OTP to email
-  fetch("https://danoski-backend‎-hc8i.onrender.com/user/send-otp", {
+  fetch("https://danoski-backend-hc8i.onrender.com/user/send-otp", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email })
@@ -135,7 +135,7 @@ function verifyOtp() {
     return;
   }
 
-  fetch("https://danoski-backend‎-hc8i.onrender.com/user/verify-otp", {
+  fetch("https://danoski-backend-hc8i.onrender.com/user/verify-otp", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, otp })
@@ -207,7 +207,7 @@ function verifyLoginPin() {
 
   const email = sessionStorage.getItem("loginEmail"); // ✅ Get login email
 
-  fetch("https://danoski-backend‎-hc8i.onrender.com/user/verify-login-pin", {
+  fetch("https://danoski-backend-hc8i.onrender.com/user/verify-login-pin", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, pin })
@@ -269,7 +269,7 @@ function setUserPin() {
     pin
   });
 
-  fetch("https://danoski-backend‎-hc8i.onrender.com/user/create-account", {
+  fetch("https://danoski-backend-hc8i.onrender.com/user/create-account", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ full_name, country, email, password, pin })
@@ -351,7 +351,7 @@ function verifyForgotOtp() {
     return;
   }
 
-  fetch("https://danoski-backend‎-hc8i.onrender.com/user/verify-password-otp", {
+  fetch("https://danoski-backend-hc8i.onrender.com/user/verify-password-otp", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, otp })
@@ -405,7 +405,7 @@ function submitNewPassword() {
     return;
   }
 
-  fetch("https://danoski-backend‎-hc8i.onrender.com/user/reset-password", {
+  fetch("https://danoski-backend-hc8i.onrender.com/user/reset-password", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password: newPassword })
@@ -443,7 +443,7 @@ function sendResetPin() {
     return;
   }
 
-  fetch("https://danoski-backend‎-hc8i.onrender.com/user/sendresetpin", {
+  fetch("https://danoski-backend-hc8i.onrender.com/user/sendresetpin", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email })
@@ -480,7 +480,7 @@ function verifyPinOtp() {
     return;
   }
 
-  fetch("https://danoski-backend‎-hc8i.onrender.com/user/verify-pin-otp", {
+  fetch("https://danoski-backend-hc8i.onrender.com/user/verify-pin-otp", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, otp })
@@ -521,7 +521,7 @@ function setNewPin() {
     return;
   }
 
-  fetch("https://danoski-backend‎-hc8i.onrender.com/user/reset-pin", {
+  fetch("https://danoski-backend-hc8i.onrender.com/user/reset-pin", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, pin })
@@ -628,7 +628,7 @@ let miningInterval;
 let dashboardSyncInterval;
 
 function startMining(email) {
-  fetch(`https://danoski-backend‎-hc8i.onrender.com/user/dashboard?email=${encodeURIComponent(email)}`)
+  fetch(`https://danoski-backend-hc8i.onrender.com/user/dashboard?email=${encodeURIComponent(email)}`)
     .then(res => res.json())
     .then(data => {
       let hashrate = data.hashrate;
@@ -657,7 +657,7 @@ function startMining(email) {
       dashboardSyncInterval = setInterval(() => {
         syncMinedBTC(email).then(() => {
           // Refresh UI values after syncing
-          fetch(`https://danoski-backend‎-hc8i.onrender.com/user/dashboard?email=${encodeURIComponent(email)}`)
+          fetch(`https://danoski-backend-hc8i.onrender.com/user/dashboard?email=${encodeURIComponent(email)}`)
             .then(res => res.json())
             .then(updated => {
               balance = updated.btc_balance;
@@ -672,7 +672,7 @@ function startMining(email) {
 }
 
 function syncMinedBTC(email) {
-  return fetch("https://danoski-backend‎-hc8i.onrender.com/user/mine-sync", {
+  return fetch("https://danoski-backend-hc8i.onrender.com/user/mine-sync", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email })
@@ -695,7 +695,7 @@ function submitWithdraw() {
     return;
   }
 
-  fetch("https://danoski-backend‎-hc8i.onrender.com/user/withdraw", {
+  fetch("https://danoski-backend-hc8i.onrender.com/user/withdraw", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email: userEmail, amount, wallet })
@@ -715,7 +715,7 @@ function submitWithdraw() {
 function loadWithdrawHistory() {
   const userEmail = sessionStorage.getItem("email");
 
-  fetch(`https://danoski-backend‎-hc8i.onrender.com/user/withdrawals?email=${encodeURIComponent(userEmail)}`)
+  fetch(`https://danoski-backend-hc8i.onrender.com/user/withdrawals?email=${encodeURIComponent(userEmail)}`)
     .then(res => res.json())
     .then(data => {
       const list = document.getElementById("withdraw-history-list"); // UPDATED ID
@@ -745,7 +745,7 @@ function showWithdrawHistoryPage() {
 }
 
 function loadMessages() {
-  fetch("https://danoski-backend‎-hc8i.onrender.com/user/messages")
+  fetch("https://danoski-backend-hc8i.onrender.com/user/messages")
     .then(res => res.json())
     .then(data => {
       console.log("📢 Announcement fetched:", data);  // ✅ Log it
@@ -776,7 +776,7 @@ function watchAd() {
 
   // Simulate 10-second ad
   setTimeout(() => {
-    fetch("https://danoski-backend‎-hc8i.onrender.com/user/claim-hashrate", {
+    fetch("https://danoski-backend-hc8i.onrender.com/user/claim-hashrate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email })
@@ -795,7 +795,7 @@ function watchAd() {
 function loadActiveHashrates() {
   const email = sessionStorage.getItem("email");
 
-  fetch(`https://danoski-backend‎-hc8i.onrender.com/user/hashrates?email=${encodeURIComponent(email)}`)
+  fetch(`https://danoski-backend-hc8i.onrender.com/user/hashrates?email=${encodeURIComponent(email)}`)
     .then(res => res.json())
     .then(data => {
       const list = document.getElementById("active-hashrates");
