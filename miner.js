@@ -785,15 +785,9 @@ function watchAd() { // New function for watching ads
     .then(data => {
       let message = data.message || data.error;
       
-      // Convert mining terminology to ad viewing terminology
-      if (message) {
-        message = message
-          .replace(/(\d+)\s*H\/s/g, "$1 ads/hr")
-          .replace(/hashrate/gi, "ad viewing rate")
-          .replace(/mining/gi, "ad viewing")
-          .replace(/mined/gi, "earned")
-          .replace(/granted/gi, "activated")
-          .replace(/claim/gi, "earn");
+      // Only convert specific backend mining messages to ad viewing terminology
+      if (message && message.includes("H/s granted")) {
+        message = message.replace(/(\d+)\s*H\/s granted/, "$1 ads/hr activated");
       }
 
       document.getElementById("ad-status").innerText = "✅ " + (message || "Advertisement completed! Rewards added.");
