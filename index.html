@@ -10,20 +10,7 @@
 <body>
   <!-- LOGIN + FORMS -->
   <div id="login-page">
-    
-    <!-- Navbar -->
-    <div class="navbar">
-      <div class="menu-btn" onclick="toggleMenu()">☰</div>
       <div class="logo">Adchain Miner</div>
-    </div>
-
-    <!-- Sidebar Menu -->
-    <div id="sidebar" class="sidebar" style="display: none;">
-      <div class="menu">
-        <a href="#" onclick="showForm('login')">🚪 Login</a>
-        <a href="#" onclick="showForm('register')">👤 Register</a>
-        <a href="#" onclick="showForm('forgot-password')">🔒 Forgot Password</a>
-      </div>
     </div>
 
     <!-- Forms Container -->
@@ -132,6 +119,9 @@
             <input type="password" id="pin4" maxlength="1" class="pin-input" />
           </div>
           <button id="create-account-btn" type="button" onclick="setUserPin()">Create Account</button>
+          <div class="form-links">
+            <a href="#" onclick="showForm('login')">Back to Login</a>
+          </div>
         </form>
       </section>
 
@@ -141,6 +131,9 @@
           <h2>Forgot Password</h2>
           <input type="email" id="forgot-pass-email" placeholder="Enter your email" required />
           <button class="btn" type="submit">SEND OTP</button>
+          <div class="form-links">
+            <a href="#" onclick="showForm('login')">Back to Login</a>
+          </div>
         </form>
       </section>
 
@@ -150,6 +143,9 @@
           <h2>Verify OTP</h2>
           <input type="text" id="forgot-pass-otp" placeholder="Enter OTP" required />
           <button class="btn" type="submit">VERIFY</button>
+          <div class="form-links">
+            <a href="#" onclick="showForm('login')">Back to Login</a>
+          </div>
         </form>
       </section>
 
@@ -160,6 +156,9 @@
           <input type="password" id="new-password" placeholder="New Password" required />
           <input type="password" id="confirm-password" placeholder="Confirm Password" required />
           <button class="btn" type="submit">RESET PASSWORD</button>
+          <div class="form-links">
+            <a href="#" onclick="showForm('login')">Back to Login</a>
+          </div>
         </form>
       </section>
 
