@@ -255,21 +255,23 @@ function verifyLoginPin() {
 }
 
 function setUserPin() {
-  const pin = ["pin1", "pin2", "pin3", "pin4"].map((id) => document.getElementById(id).value.trim()).join("")
+  const pin = ["pin1", "pin2", "pin3", "pin4"]
+    .map(id => document.getElementById(id).value.trim())
+    .join("");
 
   if (pin.length !== 4 || !/^\d{4}$/.test(pin)) {
-    showToast("⚠️ Please enter a valid 4-digit PIN.", "#e74c3c")
-    return
+    showToast("⚠️ Please enter a valid 4-digit PIN.", "#e74c3c");
+    return;
   }
 
-  const full_name = sessionStorage.getItem("name")
-  const country = sessionStorage.getItem("country")
-  const email = sessionStorage.getItem("email")
-  const password = sessionStorage.getItem("password")
+  const full_name = sessionStorage.getItem("name");
+  const country = sessionStorage.getItem("country");
+  const email = sessionStorage.getItem("email");
+  const password = sessionStorage.getItem("password");
 
-  if (![full_name, country, email, password].every((v) => v && v.trim())) {
-    showToast("⚠️ Missing user details. Please start the registration again.", "#e74c3c")
-    return
+  if (![full_name, country, email, password].every(v => v && v.trim())) {
+    showToast("⚠️ Missing user details. Please start the registration again.", "#e74c3c");
+    return;
   }
 
   // ✅ Console log the data being sent
@@ -278,37 +280,37 @@ function setUserPin() {
     country,
     email,
     password,
-    pin,
-  })
+    pin
+  });
 
   fetch("https://danoski-backend-hc8i.onrender.com/user/create-account", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ full_name, country, email, password, pin }),
+    body: JSON.stringify({ full_name, country, email, password, pin })
   })
-    .then(async (res) => {
-      let data
+    .then(async res => {
+      let data;
       try {
-        data = await res.json()
+        data = await res.json();
       } catch (err) {
-        console.error("Invalid JSON response:", err)
-        showToast("⚠️ Unexpected server response.", "#e67e22")
-        return
+        console.error("Invalid JSON response:", err);
+        showToast("⚠️ Unexpected server response.", "#e67e22");
+        return;
       }
 
       if (res.ok) {
-        showToast("✅ Account created successfully!", "#4caf50")
-        sessionStorage.setItem("isLoggedIn", "true")
-        showDashboard()
+        showToast("✅ Account created successfully!", "#4caf50");
+        sessionStorage.setItem("isLoggedIn", "true");
+        showDashboard();
       } else {
-        const errorMessage = data?.error || "❌ Account creation failed."
-        showToast(errorMessage, "#e74c3c")
+        const errorMessage = data?.error || "❌ Account creation failed.";
+        showToast(errorMessage, "#e74c3c");
       }
     })
-    .catch((err) => {
-      console.error("Account creation error:", err)
-      showToast("⚠️ Unable to connect to server.", "#f39c12")
-    })
+    .catch(err => {
+      console.error("Account creation error:", err);
+      showToast("⚠️ Unable to connect to server.", "#f39c12");
+    });
 }
 
 function sendForgotOtp() {
