@@ -76,24 +76,24 @@ function showForm(formType) {
 }
 
 function signupUser() {
-  const firstName = document.getElementById("signup-firstname").value.trim()
-  const lastName = document.getElementById("signup-lastname").value.trim()
-  const country = document.getElementById("signup-country").value
-  const email = document.getElementById("signup-email").value.trim()
-  const password = document.getElementById("signup-password").value.trim()
+  const firstName = document.getElementById("signup-firstname").value.trim();
+  const lastName = document.getElementById("signup-lastname").value.trim();
+  const country = document.getElementById("signup-country").value;
+  const email = document.getElementById("signup-email").value.trim();
+  const password = document.getElementById("signup-password").value.trim();
 
   if (!firstName || !lastName || !country || !email || !password) {
-    showToast("⚠️ Please fill in all fields.", "#e74c3c")
-    return
+    showToast("⚠️ Please fill in all fields.", "#e74c3c");
+    return;
   }
 
-  const fullName = `${firstName} ${lastName}`
+  const fullName = `${firstName} ${lastName}`;
 
   // Save signup details temporarily in sessionStorage
-  sessionStorage.setItem("name", fullName)
-  sessionStorage.setItem("country", country)
-  sessionStorage.setItem("email", email)
-  sessionStorage.setItem("password", password)
+  sessionStorage.setItem("name", fullName);
+  sessionStorage.setItem("country", country);
+  sessionStorage.setItem("email", email);
+  sessionStorage.setItem("password", password);
 
   // Send OTP to email
   fetch("https://danoski-backend-hc8i.onrender.com/user/send-otp", {
@@ -104,16 +104,27 @@ function signupUser() {
     .then((res) => res.json().then((data) => ({ ok: res.ok, data })))
     .then(({ ok, data }) => {
       if (ok) {
-        showToast("✅ OTP sent to your email. Please verify.", "#4caf50")
-        document.getElementById("otp-email").value = email
-        showForm("otp-form")
+        showToast("✅ OTP sent to your email. Please verify.", "#4caf50");
+
+        // ✅ Fill the hidden OTP email input if needed
+        const otpEmailInput = document.getElementById("otp-email");
+        if (otpEmailInput) {
+          otpEmailInput.value = email;
+        }
+
+        // ✅ Hide register form
+        document.getElementById("register-form").style.display = "none";
+
+        // ✅ Show OTP form
+        document.getElementById("otp-form").style.display = "block";
+
       } else {
-        showToast("❌ " + (data.error || "Failed to send OTP."), "#e74c3c")
+        showToast("❌ " + (data.error || "Failed to send OTP."), "#e74c3c");
       }
     })
     .catch(() => {
-      showToast("⚠️ Could not connect to server.", "#f39c12")
-    })
+      showToast("⚠️ Could not connect to server.", "#f39c12");
+    });
 }
 
 function showToast(message, background = "#4caf50") {
