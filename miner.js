@@ -141,12 +141,12 @@ function showToast(message, background = "#4caf50") {
 }
 
 function verifyOtp() {
-  const email = document.getElementById("otp-email").value.trim()
-  const otp = document.getElementById("otp-code").value.trim()
+  const email = sessionStorage.getItem("email");
+  const otp = document.getElementById("otp-code").value.trim();
 
   if (!email || !otp) {
-    showToast("⚠️ Please enter your email and OTP.", "#e74c3c")
-    return
+    showToast("⚠️ Please enter the OTP.", "#e74c3c");
+    return;
   }
 
   fetch("https://danoski-backend-hc8i.onrender.com/user/verify-otp", {
@@ -157,15 +157,15 @@ function verifyOtp() {
     .then((res) => res.json().then((data) => ({ ok: res.ok, data })))
     .then(({ ok, data }) => {
       if (ok) {
-        showToast("✅ OTP verified. Please set your 4-digit PIN.", "#4caf50")
-        showForm("pin-form")
+        showToast("✅ OTP verified. Please set your 4-digit PIN.", "#4caf50");
+        showForm("pin-form");
       } else {
-        showToast("❌ " + (data.error || "OTP verification failed."), "#e74c3c")
+        showToast("❌ " + (data.error || "OTP verification failed."), "#e74c3c");
       }
     })
     .catch(() => {
-      showToast("⚠️ Unable to connect to server.", "#f39c12")
-    })
+      showToast("⚠️ Unable to connect to server.", "#f39c12");
+    });
 }
 
 function loginUser() {
