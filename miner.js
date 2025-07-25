@@ -299,14 +299,15 @@ function setUserPin() {
       }
 
       if (res.ok) {
-        showToast("✅ Account created successfully!", "#4caf50");
-        sessionStorage.setItem("isLoggedIn", "true");
-        showDashboard();
-      } else {
-        const errorMessage = data?.error || "❌ Account creation failed.";
-        showToast(errorMessage, "#e74c3c");
+  showToast("✅ Account created successfully! Please verify your PIN.", "#4caf50");
+
+  // ⚡️ DO NOT showDashboard immediately
+  // Instead, show the pin-verify form to confirm PIN works
+  showForm("pin-verify");
+} else {
+  const errorMessage = data?.error || "❌ Account creation failed.";
+  showToast(errorMessage, "#e74c3c");
       }
-    })
     .catch(err => {
       console.error("Account creation error:", err);
       showToast("⚠️ Unable to connect to server.", "#f39c12");
