@@ -141,11 +141,11 @@ function showToast(message, background = "#4caf50") {
 }
 
 function verifyOtp() {
-  const email = document.getElementById("otp-email").value.trim();
+  const email = sessionStorage.getItem("email");  // ✅ Correct source!
   const otp = document.getElementById("otp-code").value.trim();
 
   if (!email || !otp) {
-    showToast("⚠️ Please enter your email and OTP.", "#e74c3c");
+    showToast("⚠️ Please enter your OTP.", "#e74c3c");
     return;
   }
 
@@ -158,7 +158,11 @@ function verifyOtp() {
     .then(({ ok, data }) => {
       if (ok) {
         showToast("✅ OTP verified. Please set your 4-digit PIN.", "#4caf50");
-        showForm("pin-form");
+
+        // ✅ Hide OTP section & show PIN section instead!
+        document.getElementById("otp-form").style.display = "none";
+        document.getElementById("pin-form").style.display = "block";
+
       } else {
         showToast("❌ " + (data.error || "OTP verification failed."), "#e74c3c");
       }
