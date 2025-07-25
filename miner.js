@@ -160,8 +160,8 @@ function verifyOtp() {
         showToast("✅ OTP verified. Please set your 4-digit PIN.", "#4caf50");
 
         // ✅ Hide OTP section & show PIN section instead!
-        document.getElementById("otp-form").style.display = "none";
-        document.getElementById("pin-form").style.display = "block";
+        document.getElementById("otp-section").style.display = "none";
+        document.getElementById("pin-section").style.display = "block";
 
       } else {
         showToast("❌ " + (data.error || "OTP verification failed."), "#e74c3c");
