@@ -99,14 +99,25 @@ function signupUser() {
   fetch("https://danoski-backend-hc8i.onrender.com/user/send-otp", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ email })
+    body: JSON.stringify({ email }),
   })
-    .then(res => res.json().then(data => ({ ok: res.ok, data })))
+    .then((res) => res.json().then((data) => ({ ok: res.ok, data })))
     .then(({ ok, data }) => {
       if (ok) {
         showToast("✅ OTP sent to your email. Please verify.", "#4caf50");
-        document.getElementById("otp-email").value = email;
-        showForm("otp-form");
+
+        // ✅ Fill the hidden OTP email input if needed
+        const otpEmailInput = document.getElementById("otp-email");
+        if (otpEmailInput) {
+          otpEmailInput.value = email;
+        }
+
+        // ✅ Hide register form
+        document.getElementById("register-form").style.display = "none";
+
+        // ✅ Show OTP form
+        document.getElementById("otp-form").style.display = "block";
+
       } else {
         showToast("❌ " + (data.error || "Failed to send OTP."), "#e74c3c");
       }
