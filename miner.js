@@ -141,7 +141,7 @@ function showToast(message, background = "#4caf50") {
 }
 
 function verifyOtp() {
-  const email = document.getElementById("otp-email").value.trim();
+  const email = sessionStorage.getItem("email");
   const otp = document.getElementById("otp-code").value.trim();
 
   if (!email || !otp) {
