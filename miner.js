@@ -141,15 +141,15 @@ function showToast(message, background = "#4caf50") {
 }
 
 function verifyOtp() {
-  const email = sessionStorage.getItem("email");  // ✅ Correct source!
+  const email = document.getElementById("otp-email").value.trim();
   const otp = document.getElementById("otp-code").value.trim();
 
   if (!email || !otp) {
-    showToast("⚠️ Please enter your OTP.", "#e74c3c");
+    showToast("⚠️ Please enter your email and OTP.", "#e74c3c");
     return;
   }
 
-  fetch("https://https://danoski-backend-hc8i.onrender.com/user/verify-otp", {
+  fetch("https://danoski-backend-hc8i.onrender.com/user/verify-otp", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, otp })
@@ -158,11 +158,7 @@ function verifyOtp() {
     .then(({ ok, data }) => {
       if (ok) {
         showToast("✅ OTP verified. Please set your 4-digit PIN.", "#4caf50");
-
-        // ✅ Hide OTP section & show PIN section instead!
-        document.getElementById("otp-section").style.display = "none";
-        document.getElementById("pin-section").style.display = "block";
-
+        showForm("pin-form");
       } else {
         showToast("❌ " + (data.error || "OTP verification failed."), "#e74c3c");
       }
