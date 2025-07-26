@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Dashboard - Reward System</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <div>
+                <h1>Reward System Dashboard</h1>
+            </div>
+            <div>
+                <span>Welcome, [User Name]!</span>
+                <button id="logoutButton">Logout</button>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <aside>
+            <nav>
+                <ul>
+                    <li><a href="#dashboard-overview">Dashboard Overview</a></li>
+                    <li><a href="#surveys-section">Earn Points (Surveys)</a></li>
+                    <li><a href="#transfer-points-section">Transfer Points</a></li>
+                    <li><a href="#redeem-points-section">Redeem Points</a></li>
+                    <li><a href="#profile-settings-section">Profile & Settings</a></li>
+                </ul>
+            </nav>
+        </aside>
+
+        <section id="dashboard-overview">
+            <h2>Your Reward Hub</h2>
+            <div>
+                <h3>Current Points Balance</h3>
+                <p>[X,XXX.XX] Points</p>
+            </div>
+            <div>
+                <div>
+                    <h3>Completed Surveys</h3>
+                    <p>[XX] Surveys</p>
+                </div>
+                <div>
+                    <h3>Total Points Earned</h3>
+                    <p>[X,XXX.XX] Points</p>
+                </div>
+                <div>
+                    <h3>Pending Redemptions</h3>
+                    <p>[X] Requests</p>
+                </div>
+            </div>
+            <div>
+                <button>Take a Survey</button>
+                <button>Transfer Points</button>
+                <button>Redeem Points</button>
+            </div>
+        </section>
+
+        <section id="surveys-section">
+            <h2>Earn More Points: Available Surveys</h2>
+            <div>
+                <h3>Survey Title 1</h3>
+                <p>Description of Survey 1. Learn about X and earn points!</p>
+                <p>Reward: [XXX] Points</p>
+                <button>Complete Survey</button>
+            </div>
+            <div>
+                <h3>Survey Title 2</h3>
+                <p>Description of Survey 2. Share your opinion on Y and get rewarded!</p>
+                <p>Reward: [XXX] Points</p>
+                <button>Complete Survey</button>
+            </div>
+            <div>
+                <h3>Survey Title 3</h3>
+                <p>Description of Survey 3. Quick poll on Z for instant points.</p>
+                <p>Reward: [XXX] Points</p>
+                <button>Complete Survey</button>
+            </div>
+            <p>No more surveys available at the moment. Check back soon!</p>
+        </section>
+
+        <section id="transfer-points-section">
+            <h2>Transfer Points to Another User</h2>
+            <form id="transferPointsForm">
+                <div>
+                    <label for="recipientEmail">Recipient's Email</label>
+                    <input type="email" id="recipientEmail" name="recipientEmail" required>
+                </div>
+                <div>
+                    <label for="transferAmount">Amount to Transfer</label>
+                    <input type="number" id="transferAmount" name="transferAmount" min="1" step="0.01" required>
+                </div>
+                <button type="submit">Initiate Transfer</button>
+            </form>
+
+            <h3>Your Point Transfer History</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Recipient/Sender</th>
+                        <th>Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>[YYYY-MM-DD]</td>
+                        <td>Sent</td>
+                        <td>[Recipient Email]</td>
+                        <td>[XX.XX] Points</td>
+                    </tr>
+                    <tr>
+                        <td>[YYYY-MM-DD]</td>
+                        <td>Received</td>
+                        <td>[Sender Email]</td>
+                        <td>[XX.XX] Points</td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">No transfer history yet.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="redeem-points-section">
+            <h2>Redeem Your Points</h2>
+            <div>
+                <h3>Current Redemption Rates</h3>
+                <p><strong>1 Point = [0.00001] BTC</strong></p>
+                <p><strong>1 Point = [$0.01] USD (Gift Card Equivalent)</strong></p>
+            </div>
+
+            <h3>Redeem for Bitcoin</h3>
+            <form id="bitcoinRedemptionForm">
+                <div>
+                    <label for="btcPointsAmount">Points to Redeem</label>
+                    <input type="number" id="btcPointsAmount" name="btcPointsAmount" min="1" step="0.01" required>
+                </div>
+                <div>
+                    <label for="bitcoinWalletAddress">Your Bitcoin Wallet Address</label>
+                    <input type="text" id="bitcoinWalletAddress" name="bitcoinWalletAddress" required>
+                </div>
+                <button type="submit">Request Bitcoin Redemption</button>
+            </form>
+
+            <h3>Redeem for Gift Card</h3>
+            <form id="giftCardRedemptionForm">
+                <div>
+                    <label for="gcPointsAmount">Points to Redeem</label>
+                    <input type="number" id="gcPointsAmount" name="gcPointsAmount" min="1" step="0.01" required>
+                </div>
+                <div>
+                    <label for="giftCardEmail">Recipient Email for Gift Card</label>
+                    <input type="email" id="giftCardEmail" name="giftCardEmail" required>
+                </div>
+                <button type="submit">Request Gift Card Redemption</button>
+            </form>
+
+            <h3>Your Redemption History</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Points</th>
+                        <th>Equivalent Value</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>[YYYY-MM-DD]</td>
+                        <td>Bitcoin</td>
+                        <td>[XXX.XX]</td>
+                        <td>[0.00XXX] BTC</td>
+                        <td>Pending</td>
+                    </tr>
+                    <tr>
+                        <td>[YYYY-MM-DD]</td>
+                        <td>Gift Card</td>
+                        <td>[XXX.XX]</td>
+                        <td>[$XX.XX] USD</td>
+                        <td>Approved</td>
+                    </tr>
+                    <tr>
+                        <td colspan="5">No redemption history yet.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <section id="profile-settings-section">
+            <h2>Your Profile & Account Settings</h2>
+            <div>
+                <h3>Personal Information</h3>
+                <p><strong>Name:</strong> [User Name]</p>
+                <p><strong>Email:</strong> [user@example.com]</p>
+                <p><strong>Referral Code:</strong> [ABC123XYZ]</p>
+            </div>
+
+            <div>
+                <h3>Security Actions</h3>
+                <button id="resetPinButton">Reset PIN</button>
+                <button id="changePasswordButton">Change Password</button>
+            </div>
+
+            <h3>Recent Activity Log</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Date & Time</th>
+                        <th>Action</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>[YYYY-MM-DD HH:MM]</td>
+                        <td>Login</td>
+                        <td>Successful login from IP [XXX.XXX.XXX.XXX]</td>
+                    </tr>
+                    <tr>
+                        <td>[YYYY-MM-DD HH:MM]</td>
+                        <td>Survey Completed</td>
+                        <td>Earned [XXX] points from "Survey Title 1"</td>
+                    </tr>
+                    <tr>
+                        <td>[YYYY-MM-DD HH:MM]</td>
+                        <td>Points Transfer</td>
+                        <td>Transferred [XX.XX] points to [Recipient Email]</td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">No recent activity.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2025 Reward System. All rights reserved.</p>
+    </footer>
+</body>
+</html>
