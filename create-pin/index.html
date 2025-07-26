@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Your PIN - Reward System</title>
+</head>
+<body>
+    <div>
+        <h2>Create Your 4-Digit PIN</h2>
+        <p>This PIN will be used for quick access to your dashboard.</p>
+        <form id="createPinForm">
+            <div>
+                <label for="newPin">New PIN</label>
+                <input type="password" id="newPin" name="newPin" maxlength="4" pattern="\d{4}" required>
+            </div>
+            <div>
+                <label for="confirmNewPin">Confirm New PIN</label>
+                <input type="password" id="confirmNewPin" name="confirmNewPin" maxlength="4" pattern="\d{4}" required>
+            </div>
+            <button type="submit">Create PIN</button>
+        </form>
+        <div>
+            <a href="index.html">Back to Login</a>
+        </div>
+    </div>
+</body>
+</html>
