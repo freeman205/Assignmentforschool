@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify PIN - Reward System</title>
+</head>
+<body>
+    <div>
+        <h2>Enter Your PIN</h2>
+        <p>Please enter your 4-digit PIN to access your dashboard.</p>
+        <form id="pinVerifyLoginForm">
+            <div>
+                <label for="pin">PIN</label>
+                <input type="password" id="pin" name="pin" maxlength="4" pattern="\d{4}" required>
+            </div>
+            <button type="submit">Verify PIN</button>
+        </form>
+        <div>
+            <button type="button" id="logoutButton">Logout</button>
+            <a href="pin-reset.html">Reset PIN</a>
+        </div>
+    </div>
+</body>
+</html>
