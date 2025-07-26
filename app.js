@@ -1,6 +1,6 @@
 // app.js
 
-const BASE_API_URL = "http://localhost:8000/api" // Your FastAPI backend URL - IMPORTANT: Update this for deployment!
+const BASE_API_URL = "https://dansog-backend.onrender.com/api" // Your FastAPI backend URL - IMPORTANT: Update this for deployment!
 
 // --- Utility Functions ---
 
@@ -465,3 +465,4 @@ document.addEventListener("DOMContentLoaded", () => {
     setNewPinForm.addEventListener("submit", handleSetNewPinForm)
   }
 })
+    
