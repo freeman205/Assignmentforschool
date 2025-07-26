@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Password Reset OTP - Reward System</title>
+</head>
+<body>
+    <div>
+        <h2>Verify Password Reset OTP</h2>
+        <p>An OTP has been sent to your email address for password reset.</p>
+        <form id="forgotPasswordOtpVerifyForm">
+            <div>
+                <label for="otpCode">OTP Code</label>
+                <input type="text" id="otpCode" name="otpCode" maxlength="6" pattern="\d{6}" required>
+            </div>
+            <button type="submit">Verify OTP</button>
+            <button type="button" id="resendOtpButton">Resend OTP</button>
+        </form>
+        <div>
+            <a href="forgot-password.html">Back to Forgot Password</a>
+        </div>
+    </div>
+</body>
+</html>
