@@ -1,4 +1,225 @@
+/* styles.css */
 
+/* Import Tailwind CSS */
+@import url("https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css");
+
+/* Custom styles for a professional look */
+body {
+  font-family: "Inter", sans-serif; /* A modern, clean font */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* Ensure body takes full height and centers content */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #f9fafb; /* Light gray background */
+}
+
+/* General form container styling */
+.bg-white {
+  background-color: #ffffff;
+}
+
+.p-8 {
+  padding: 2rem;
+}
+
+.rounded-lg {
+  border-radius: 0.5rem;
+}
+
+.shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.max-w-md {
+  max-width: 28rem; /* Equivalent to 448px */
+}
+
+.w-full {
+  width: 100%;
+}
+
+/* Headings */
+.text-3xl {
+  font-size: 1.875rem; /* 30px */
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.text-gray-800 {
+  color: #1f2937;
+}
+
+.mb-6 {
+  margin-bottom: 1.5rem;
+}
+
+/* Form spacing */
+.space-y-6 > :not([hidden]) ~ :not([hidden]) {
+  --tw-space-y-reverse: 0;
+  margin-top: calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));
+  margin-bottom: calc(1.5rem * var(--tw-space-y-reverse));
+}
+
+/* Labels */
+.block {
+  display: block;
+}
+
+.text-sm {
+  font-size: 0.875rem; /* 14px */
+}
+
+.font-medium {
+  font-weight: 500;
+}
+
+.text-gray-700 {
+  color: #374151;
+}
+
+.mb-1 {
+  margin-bottom: 0.25rem;
+}
+
+/* Inputs */
+.px-4 {
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+.py-2 {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.border {
+  border-width: 1px;
+}
+
+.border-gray-300 {
+  border-color: #d1d5db;
+}
+
+.focus\:ring-emerald-500:focus {
+  --tw-ring-color: #10b981; /* Emerald 500 */
+  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  border-color: #10b981; /* Emerald 500 */
+}
+
+.focus\:border-emerald-500:focus {
+  border-color: #10b981; /* Emerald 500 */
+}
+
+/* Buttons */
+.bg-emerald-600 {
+  background-color: #059669; /* Emerald 600 */
+}
+
+.text-white {
+  color: #ffffff;
+}
+
+.hover\:bg-emerald-700:hover {
+  background-color: #047857; /* Emerald 700 */
+}
+
+.focus\:outline-none:focus {
+  outline: 0;
+}
+
+.focus\:ring-2:focus {
+  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width, 0px) var(--tw-ring-offset-color, #fff);
+  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width, 0px)) var(--tw-ring-color);
+  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
+}
+
+.focus\:ring-offset-2:focus {
+  --tw-ring-offset-width: 2px;
+}
+
+.focus\:ring-emerald-500:focus {
+  --tw-ring-color: #10b981; /* Emerald 500 */
+}
+
+/* Message display */
+.text-red-500 {
+  color: #ef4444;
+}
+
+.text-green-500 {
+  color: #22c55e;
+}
+
+/* Links */
+.text-emerald-600 {
+  color: #059669;
+}
+
+.hover\:text-emerald-800:hover {
+  color: #065f46;
+}
+
+.font-medium {
+  font-weight: 500;
+}
+
+/* Specific styles for resend OTP button */
+.bg-gray-200 {
+  background-color: #e5e7eb;
+}
+
+.text-gray-800 {
+  color: #1f2937;
+}
+
+.hover\:bg-gray-300:hover {
+  background-color: #d1d5db;
+}
+
+.focus\:ring-gray-400:focus {
+  --tw-ring-color: #9ca3af;
+}
+
+/* Logout button specific style */
+.bg-red-500 {
+  background-color: #ef4444;
+}
+
+.hover\:bg-red-600:hover {
+  background-color: #dc2626;
+}
+
+.focus\:ring-red-500:focus {
+  --tw-ring-color: #ef4444;
+}
+
+/* Flex utilities for pin-verify-login.html */
+.flex {
+  display: flex;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.mt-6 {
+  margin-top: 1.5rem;
+}
 /* Custom styles for a professional look */
 body {
   font-family: "Inter", sans-serif; /* A modern, clean font */
