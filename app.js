@@ -359,7 +359,7 @@ async function handlePinResetOtpVerifyForm(event) {
     await apiCall("/auth/verify-otp", "POST", { email, otp_code: otpCode, purpose: "pin_reset" })
     displayMessage("message", "OTP verified. Redirecting to set new PIN...", true)
     setTimeout(() => {
-      window.location.href = "set-new-pin.html"
+      window.location.href = "../set-new-pin"
     }, 1500)
   } catch (error) {
     displayMessage("message", error.message || "OTP verification failed.", false)
@@ -392,7 +392,7 @@ async function handleSetNewPinForm(event) {
   // For now, this will simulate success.
   displayMessage("message", "New PIN set successfully! (Backend endpoint needed for full functionality)", true)
   sessionStorage.removeItem("pinResetEmail") // Clean up
-  setTimeout(() => (window.location.href = "index.html"), 1500)
+  setTimeout(() => (window.location.href = "../pin-verify-login"), 1500)
 }
 
 // --- Event Listeners ---
