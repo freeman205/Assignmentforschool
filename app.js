@@ -248,7 +248,7 @@ async function handleForgotPasswordForm(event) {
     await apiCall("/auth/request-otp", "POST", { email, purpose: "password_reset" })
     displayMessage("message", "Password reset OTP sent. Redirecting...", true)
     setTimeout(() => {
-      window.location.href = "forgot-password-otp.html"
+      window.location.href = "../forgot-password-otp"
     }, 1500)
   } catch (error) {
     displayMessage("message", error.message || "Failed to request password reset OTP.", false)
@@ -264,7 +264,7 @@ async function handleForgotPasswordOtpVerifyForm(event) {
 
   if (!email) {
     displayMessage("message", "Session expired or invalid. Please go back to forgot password.", false)
-    setTimeout(() => (window.location.href = "forgot-password.html"), 2000)
+    setTimeout(() => (window.location.href = "../forgot-password"), 2000)
     return
   }
 
@@ -272,7 +272,7 @@ async function handleForgotPasswordOtpVerifyForm(event) {
     await apiCall("/auth/verify-otp", "POST", { email, otp_code: otpCode, purpose: "password_reset" })
     displayMessage("message", "OTP verified. Redirecting to set new password...", true)
     setTimeout(() => {
-      window.location.href = "new-password.html"
+      window.location.href = "../new-password"
     }, 1500)
   } catch (error) {
     displayMessage("message", error.message || "OTP verification failed.", false)
@@ -293,7 +293,7 @@ async function handleNewPasswordForm(event) {
   }
   if (!email) {
     displayMessage("message", "Session expired or invalid. Please restart password reset.", false)
-    setTimeout(() => (window.location.href = "forgot-password.html"), 2000)
+    setTimeout(() => (window.location.href = "../forgot-password"), 2000)
     return
   }
 
