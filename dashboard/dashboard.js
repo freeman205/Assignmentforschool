@@ -21,6 +21,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   // --- DOM Elements ---
   const userNameElement = document.getElementById("userName")
   const logoutButton = document.getElementById("logoutButton")
+  const mobileMenuButton = document.getElementById("mobileMenuButton")
+  const sidebar = document.getElementById("sidebar")
+
   const pointsBalanceElement = document.getElementById("pointsBalance")
   const completedSurveysElement = document.getElementById("completedSurveys")
   const totalEarnedElement = document.getElementById("totalEarned")
@@ -61,6 +64,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (logoutButton) {
     logoutButton.addEventListener("click", handleLogoutButton)
   }
+  if (mobileMenuButton) {
+    mobileMenuButton.addEventListener("click", toggleSidebar)
+  }
   if (transferPointsForm) {
     transferPointsForm.addEventListener("submit", handleTransferPoints)
   }
@@ -81,7 +87,23 @@ document.addEventListener("DOMContentLoaded", async () => {
     })
   }
 
-  // --- Navigation Scroll ---
+  // --- Sidebar Toggle Functionality ---
+  function toggleSidebar() {
+    document.body.classList.toggle("sidebar-open")
+  }
+
+  // Close sidebar when clicking outside on mobile
+  document.body.addEventListener("click", (event) => {
+    if (
+      document.body.classList.contains("sidebar-open") &&
+      !sidebar.contains(event.target) &&
+      !mobileMenuButton.contains(event.target)
+    ) {
+      document.body.classList.remove("sidebar-open")
+    }
+  })
+
+  // Close sidebar on navigation link click (mobile)
   document.querySelectorAll("aside nav a.nav-link").forEach((anchor) => {
     anchor.addEventListener("click", function (e) {
       e.preventDefault()
@@ -92,6 +114,12 @@ document.addEventListener("DOMContentLoaded", async () => {
       // Update active class
       document.querySelectorAll("aside nav a.nav-link").forEach((link) => link.classList.remove("active"))
       this.classList.add("active")
+
+      // Close sidebar on mobile after clicking a link
+      if (window.innerWidth < 768) {
+        // Assuming 768px is your md breakpoint
+        document.body.classList.remove("sidebar-open")
+      }
     })
   })
 
@@ -374,3 +402,4 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Initial call to set correct field visibility on page load for redemption form
   toggleRedemptionFields()
 })
+          
