@@ -161,7 +161,7 @@ async function handleOtpVerifyForm(event) {
     displayMessage("message", "OTP verified. Redirecting to create your PIN...", true)
     // OTP is verified, now redirect to PIN creation page
     setTimeout(() => {
-      window.location.href = "create-pin.html" // Redirect to the PIN creation page
+      window.location.href = "../create-pin" // Redirect to the PIN creation page
     }, 1500)
   } catch (error) {
     displayMessage("message", error.message || "OTP verification failed.", false)
@@ -248,7 +248,7 @@ async function handleForgotPasswordForm(event) {
     await apiCall("/auth/request-otp", "POST", { email, purpose: "password_reset" })
     displayMessage("message", "Password reset OTP sent. Redirecting...", true)
     setTimeout(() => {
-      window.location.href = "forgot-password-otp.html"
+      window.location.href = "../forgot-password-otp"
     }, 1500)
   } catch (error) {
     displayMessage("message", error.message || "Failed to request password reset OTP.", false)
@@ -264,7 +264,7 @@ async function handleForgotPasswordOtpVerifyForm(event) {
 
   if (!email) {
     displayMessage("message", "Session expired or invalid. Please go back to forgot password.", false)
-    setTimeout(() => (window.location.href = "forgot-password.html"), 2000)
+    setTimeout(() => (window.location.href = "../forgot-password"), 2000)
     return
   }
 
@@ -272,7 +272,7 @@ async function handleForgotPasswordOtpVerifyForm(event) {
     await apiCall("/auth/verify-otp", "POST", { email, otp_code: otpCode, purpose: "password_reset" })
     displayMessage("message", "OTP verified. Redirecting to set new password...", true)
     setTimeout(() => {
-      window.location.href = "new-password.html"
+      window.location.href = "../new-password"
     }, 1500)
   } catch (error) {
     displayMessage("message", error.message || "OTP verification failed.", false)
@@ -293,7 +293,7 @@ async function handleNewPasswordForm(event) {
   }
   if (!email) {
     displayMessage("message", "Session expired or invalid. Please restart password reset.", false)
-    setTimeout(() => (window.location.href = "forgot-password.html"), 2000)
+    setTimeout(() => (window.location.href = "../forgot-password"), 2000)
     return
   }
 
@@ -301,7 +301,7 @@ async function handleNewPasswordForm(event) {
   // For now, this will simulate success.
   displayMessage("message", "Password reset successfully! (Backend endpoint needed for full functionality)", true)
   sessionStorage.removeItem("forgotPasswordEmail") // Clean up
-  setTimeout(() => (window.location.href = "index.html"), 1500)
+  setTimeout(() => (window.location.href = "../login"), 1500)
 }
 
 async function handlePinVerifyLoginForm(event) {
