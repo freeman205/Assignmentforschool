@@ -415,4 +415,3 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Initial call to set correct field visibility on page load for redemption form
   toggleRedemptionFields()
 })
-                
