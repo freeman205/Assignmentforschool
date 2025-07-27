@@ -138,6 +138,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // --- Form Handlers ---
 
   async function handleLoginForm(event) {
+    debugger;
     event.preventDefault()
     clearMessage("message")
 
@@ -308,6 +309,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function handleForgotPasswordForm(event) {
+    debugger;
     event.preventDefault()
     clearMessage("message")
 
