@@ -319,7 +319,7 @@ document.addEventListener("DOMContentLoaded", () => {
       showToast(response.message || "Password reset OTP sent.", "success")
       displayMessage("message", response.message || "Password reset OTP sent. Redirecting...", true)
       setTimeout(() => {
-        window.location.href = "forgot-password-otp.html"
+        window.location.href = "../forgot-password-otp"
       }, 1500)
     } catch (error) {
       showToast(error.message || "Failed to request password reset OTP.", "error")
@@ -337,7 +337,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!email) {
       showToast("Session expired or invalid. Please go back to forgot password.", "error")
       displayMessage("message", "Session expired or invalid. Please go back to forgot password.", false)
-      setTimeout(() => (window.location.href = "forgot-password.html"), 2000)
+      setTimeout(() => (window.location.href = "../forgot-password"), 2000)
       return
     }
 
@@ -350,7 +350,7 @@ document.addEventListener("DOMContentLoaded", () => {
       showToast(response.message || "OTP verified.", "success")
       displayMessage("message", response.message || "OTP verified. Redirecting to set new password...", true)
       setTimeout(() => {
-        window.location.href = "new-password.html"
+        window.location.href = "../new-password"
       }, 1500)
     } catch (error) {
       showToast(error.message || "OTP verification failed.", "error")
@@ -374,7 +374,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!email) {
       showToast("Session expired or invalid. Please restart password reset.", "error")
       displayMessage("message", "Session expired or invalid. Please restart password reset.", false)
-      setTimeout(() => (window.location.href = "forgot-password.html"), 2000)
+      setTimeout(() => (window.location.href = "../forgot-password"), 2000)
       return
     }
 
@@ -383,7 +383,7 @@ document.addEventListener("DOMContentLoaded", () => {
     showToast("Password reset successfully! (Backend endpoint needed for full functionality)", "success")
     displayMessage("message", "Password reset successfully! (Backend endpoint needed for full functionality)", true)
     sessionStorage.removeItem("forgotPasswordEmail") // Clean up
-    setTimeout(() => (window.location.href = "index.html"), 1500)
+    setTimeout(() => (window.location.href = "../login"), 1500)
   }
 
   async function handlePinVerifyLoginForm(event) {
@@ -396,7 +396,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const response = await apiCall("/auth/verify-pin", "POST", { pin }, true) // Requires auth token
       showToast(response.message || "PIN verified.", "success")
       displayMessage("message", response.message || "PIN verified. Accessing dashboard...", true)
-      window.location.href = "dashboard.html" // Redirect to dashboard
+      window.location.href = "../dashboard" // Redirect to dashboard
     } catch (error) {
       showToast(error.message || "Invalid PIN. Please try again.", "error")
       displayMessage("message", error.message || "Invalid PIN. Please try again.", false)
@@ -406,7 +406,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function handleLogoutButton() {
     clearAuthData()
     showToast("Logged out successfully!", "success")
-    window.location.href = "index.html" // Redirect to login page
+    window.location.href = "../login" // Redirect to login page
   }
   // Expose handleLogoutButton globally as well, as it's used in pin-verify-login.html
   window.handleLogoutButton = handleLogoutButton
@@ -423,7 +423,7 @@ document.addEventListener("DOMContentLoaded", () => {
       showToast(response.message || "PIN reset OTP sent.", "success")
       displayMessage("message", response.message || "PIN reset OTP sent. Redirecting...", true)
       setTimeout(() => {
-        window.location.href = "pin-reset-otp.html"
+        window.location.href = "../pin-reset-otp"
       }, 1500)
     } catch (error) {
       showToast(error.message || "Failed to request PIN reset OTP.", "error")
@@ -441,7 +441,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!email) {
       showToast("Session expired or invalid. Please go back to PIN reset.", "error")
       displayMessage("message", "Session expired or invalid. Please go back to PIN reset.", false)
-      setTimeout(() => (window.location.href = "pin-reset.html"), 2000)
+      setTimeout(() => (window.location.href = "../pin-reset"), 2000)
       return
     }
 
@@ -450,7 +450,7 @@ document.addEventListener("DOMContentLoaded", () => {
       showToast(response.message || "OTP verified.", "success")
       displayMessage("message", response.message || "OTP verified. Redirecting to set new PIN...", true)
       setTimeout(() => {
-        window.location.href = "set-new-pin.html"
+        window.location.href = "../set-new-pin"
       }, 1500)
     } catch (error) {
       showToast(error.message || "OTP verification failed.", "error")
