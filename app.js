@@ -92,7 +92,7 @@ async function apiCall(endpoint, method = "GET", data = null, requiresAuth = fal
     const token = getAuthToken()
     if (!token) {
       showToast("Authentication required. Please log in.", "error")
-      window.location.href = "index.html" // Redirect to login if no token
+      window.location.href = "../login" // Redirect to login if no token
       throw new Error("No authentication token found. Please log in.")
     }
     options.headers["Authorization"] = `Bearer ${token}`
@@ -256,7 +256,7 @@ async function handleCreatePinForm(event) {
   if (!tempSignupData || !tempSignupData.email) {
     showToast("Signup session expired. Please start again.", "error")
     displayMessage("message", "Signup session expired. Please start again.", false)
-    setTimeout(() => (window.location.href = "signup.html"), 2000)
+    setTimeout(() => (window.location.href = "../signup"), 2000)
     return
   }
 
@@ -320,7 +320,7 @@ async function handleForgotPasswordOtpVerifyForm(event) {
   if (!email) {
     showToast("Session expired or invalid. Please go back to forgot password.", "error")
     displayMessage("message", "Session expired or invalid. Please go back to forgot password.", false)
-    setTimeout(() => (window.location.href = "forgot-password.html"), 2000)
+    setTimeout(() => (window.location.href = "../forgot-password"), 2000)
     return
   }
 
@@ -329,7 +329,7 @@ async function handleForgotPasswordOtpVerifyForm(event) {
     showToast(response.message || "OTP verified.", "success")
     displayMessage("message", response.message || "OTP verified. Redirecting to set new password...", true)
     setTimeout(() => {
-      window.location.href = "new-password.html"
+      window.location.href = "../new-password"
     }, 1500)
   } catch (error) {
     showToast(error.message || "OTP verification failed.", "error")
@@ -353,7 +353,7 @@ async function handleNewPasswordForm(event) {
   if (!email) {
     showToast("Session expired or invalid. Please restart password reset.", "error")
     displayMessage("message", "Session expired or invalid. Please restart password reset.", false)
-    setTimeout(() => (window.location.href = "forgot-password.html"), 2000)
+    setTimeout(() => (window.location.href = "../forgot-password"), 2000)
     return
   }
 
@@ -362,7 +362,7 @@ async function handleNewPasswordForm(event) {
   showToast("Password reset successfully! (Backend endpoint needed for full functionality)", "success")
   displayMessage("message", "Password reset successfully! (Backend endpoint needed for full functionality)", true)
   sessionStorage.removeItem("forgotPasswordEmail") // Clean up
-  setTimeout(() => (window.location.href = "index.html"), 1500)
+  setTimeout(() => (window.location.href = "../login"), 1500)
 }
 
 async function handlePinVerifyLoginForm(event) {
@@ -375,7 +375,7 @@ async function handlePinVerifyLoginForm(event) {
     const response = await apiCall("/auth/verify-pin", "POST", { pin }, true) // Requires auth token
     showToast(response.message || "PIN verified.", "success")
     displayMessage("message", response.message || "PIN verified. Accessing dashboard...", true)
-    window.location.href = "dashboard.html" // Redirect to dashboard
+    window.location.href = "../dashboard" // Redirect to dashboard
   } catch (error) {
     showToast(error.message || "Invalid PIN. Please try again.", "error")
     displayMessage("message", error.message || "Invalid PIN. Please try again.", false)
@@ -385,7 +385,7 @@ async function handlePinVerifyLoginForm(event) {
 function handleLogoutButton() {
   clearAuthData()
   showToast("Logged out successfully!", "success")
-  window.location.href = "index.html" // Redirect to login page
+  window.location.href = "../login" // Redirect to login page
 }
 
 async function handlePinResetForm(event) {
@@ -400,7 +400,7 @@ async function handlePinResetForm(event) {
     showToast(response.message || "PIN reset OTP sent.", "success")
     displayMessage("message", response.message || "PIN reset OTP sent. Redirecting...", true)
     setTimeout(() => {
-      window.location.href = "pin-reset-otp.html"
+      window.location.href = "../pin-reset-otp"
     }, 1500)
   } catch (error) {
     showToast(error.message || "Failed to request PIN reset OTP.", "error")
@@ -418,7 +418,7 @@ async function handlePinResetOtpVerifyForm(event) {
   if (!email) {
     showToast("Session expired or invalid. Please go back to PIN reset.", "error")
     displayMessage("message", "Session expired or invalid. Please go back to PIN reset.", false)
-    setTimeout(() => (window.location.href = "pin-reset.html"), 2000)
+    setTimeout(() => (window.location.href = "../pin-reset"), 2000)
     return
   }
 
@@ -427,7 +427,7 @@ async function handlePinResetOtpVerifyForm(event) {
     showToast(response.message || "OTP verified.", "success")
     displayMessage("message", response.message || "OTP verified. Redirecting to set new PIN...", true)
     setTimeout(() => {
-      window.location.href = "set-new-pin.html"
+      window.location.href = "../set-new-pin"
     }, 1500)
   } catch (error) {
     showToast(error.message || "OTP verification failed.", "error")
@@ -456,7 +456,7 @@ async function handleSetNewPinForm(event) {
   if (!email) {
     showToast("Session expired or invalid. Please restart PIN reset.", "error")
     displayMessage("message", "Session expired or invalid. Please restart PIN reset.", false)
-    setTimeout(() => (window.location.href = "pin-reset.html"), 2000)
+    setTimeout(() => (window.location.href = "../pin-reset"), 2000)
     return
   }
 
@@ -465,7 +465,7 @@ async function handleSetNewPinForm(event) {
   showToast("New PIN set successfully! (Backend endpoint needed for full functionality)", "success")
   displayMessage("message", "New PIN set successfully! (Backend endpoint needed for full functionality)", true)
   sessionStorage.removeItem("pinResetEmail") // Clean up
-  setTimeout(() => (window.location.href = "index.html"), 1500)
+  setTimeout(() => (window.location.href = "../login"), 1500)
 }
 
 // --- Dashboard Functions ---
