@@ -5,189 +5,213 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Your Dashboard - Reward System</title>
     <link rel="stylesheet" href="dashboard.css">
+    <!-- Ensure Inter font is loaded for consistent typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
-<body>
-    <header>
-        <nav>
-            <div>
-                <h1>Reward System Dashboard</h1>
+<body class="flex flex-col min-h-screen bg-gray-50 text-gray-700">
+    <div id="toast-container" class="fixed top-4 right-4 z-50 flex flex-col gap-2"></div>
+
+    <header class="bg-white shadow-sm border-b border-gray-200 py-4 px-6 md:px-8">
+        <nav class="flex justify-between items-center max-w-7xl mx-auto">
+            <div class="flex items-center">
+                <h1 class="text-2xl font-bold text-gray-800">Reward System Dashboard</h1>
             </div>
-            <div>
-                <span>Welcome, <span id="userName">[User Name]</span>!</span>
-                <button id="logoutButton" class="button primary">Logout</button>
+            <div class="flex items-center gap-4">
+                <span class="text-gray-600 font-medium">Welcome, <span id="userName" class="text-emerald-600">[User Name]</span>!</span>
+                <button id="logoutButton" class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors duration-200 text-sm font-semibold">Logout</button>
             </div>
         </nav>
     </header>
 
-    <main>
-        <aside>
+    <main class="flex flex-col md:flex-row flex-1 max-w-7xl mx-auto w-full py-6 px-4 md:px-8 gap-6">
+        <aside class="w-full md:w-64 bg-white rounded-lg shadow-md p-6 md:sticky md:top-6 md:h-fit">
             <nav>
-                <ul>
-                    <li><a href="#dashboard-overview" class="active">Dashboard Overview</a></li>
-                    <li><a href="#surveys-section">Earn Points (Surveys)</a></li>
-                    <li><a href="#transfer-points-section">Transfer Points</a></li>
-                    <li><a href="#redeem-points-section">Redeem Points</a></li>
-                    <li><a href="#profile-settings-section">Profile & Settings</a></li>
+                <ul class="space-y-2">
+                    <li><a href="#dashboard-overview" class="nav-link active flex items-center gap-3 p-3 rounded-md hover:bg-emerald-50 hover:text-emerald-700 transition-all duration-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-layout-dashboard"><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><line x1="3" x2="21" y1="9" y2="9"/><line x1="9" x2="9" y1="21" y2="9"/></svg>
+                        Dashboard Overview
+                    </a></li>
+                    <li><a href="#surveys-section" class="nav-link flex items-center gap-3 p-3 rounded-md hover:bg-emerald-50 hover:text-emerald-700 transition-all duration-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-clipboard-list"><rect width="8" height="4" x="8" y="2" rx="1" ry="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg>
+                        Earn Points (Surveys)
+                    </a></li>
+                    <li><a href="#transfer-points-section" class="nav-link flex items-center gap-3 p-3 rounded-md hover:bg-emerald-50 hover:text-emerald-700 transition-all duration-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-send"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+                        Transfer Points
+                    </a></li>
+                    <li><a href="#redeem-points-section" class="nav-link flex items-center gap-3 p-3 rounded-md hover:bg-emerald-50 hover:text-emerald-700 transition-all duration-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-gift"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M12 8v13H7a2 2 0 0 1-2-2V8z"/><path d="M12 8v13h5a2 2 0 0 0 2-2V8z"/><path d="M7 8h10a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H7a2 2 0 0 0-2 2v1a2 2 0 0 0 2 2z"/></svg>
+                        Redeem Points
+                    </a></li>
+                    <li><a href="#profile-settings-section" class="nav-link flex items-center gap-3 p-3 rounded-md hover:bg-emerald-50 hover:text-emerald-700 transition-all duration-200">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-settings"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.78 1.35a2 2 0 0 0 .73 2.73l.09.09a2 2 0 0 1 0 2.83l-.08.08a2 2 0 0 0-.73 2.73l.78 1.35a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.78-1.35a2 2 0 0 0-.73-2.73l-.09-.09a2 2 0 0 1 0-2.83l.08-.08a2 2 0 0 0 .73-2.73l-.78-1.35a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
+                        Profile & Settings
+                    </a></li>
                 </ul>
             </nav>
         </aside>
 
-        <section id="dashboard-overview">
-            <h2>Your Reward Hub</h2>
-            <div>
-                <div>
-                    <h3>Current Points Balance</h3>
-                    <p id="pointsBalance">[X,XXX.XX] Points</p>
+        <div class="flex-1 space-y-6">
+            <section id="dashboard-overview" class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 pb-4 border-b border-gray-200">Your Reward Hub</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+                    <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-5 text-center shadow-sm">
+                        <h3 class="text-lg font-semibold text-emerald-700 mb-2">Current Points Balance</h3>
+                        <p id="pointsBalance" class="text-4xl font-extrabold text-emerald-600">0.00 Points</p>
+                    </div>
+                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-5 text-center shadow-sm">
+                        <h3 class="text-lg font-semibold text-gray-700 mb-2">Completed Surveys</h3>
+                        <p id="completedSurveys" class="text-3xl font-bold text-gray-800">0 Surveys</p>
+                    </div>
+                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-5 text-center shadow-sm">
+                        <h3 class="text-lg font-semibold text-gray-700 mb-2">Total Points Earned</h3>
+                        <p id="totalEarned" class="text-3xl font-bold text-gray-800">0.00 Points</p>
+                    </div>
+                    <div class="bg-gray-50 border border-gray-200 rounded-lg p-5 text-center shadow-sm">
+                        <h3 class="text-lg font-semibold text-gray-700 mb-2">Pending Redemptions</h3>
+                        <p id="pendingRedemptions" class="text-3xl font-bold text-gray-800">0 Requests</p>
+                    </div>
                 </div>
-                <div>
-                    <h3>Completed Surveys</h3>
-                    <p id="completedSurveys">[XX] Surveys</p>
+                <div class="flex flex-col sm:flex-row gap-4 mt-6">
+                    <button class="btn-primary" onclick="document.querySelector('#surveys-section').scrollIntoView({behavior: 'smooth'});">Take a Survey</button>
+                    <button class="btn-primary" onclick="document.querySelector('#transfer-points-section').scrollIntoView({behavior: 'smooth'});">Transfer Points</button>
+                    <button class="btn-primary" onclick="document.querySelector('#redeem-points-section').scrollIntoView({behavior: 'smooth'});">Redeem Points</button>
                 </div>
-                <div>
-                    <h3>Total Points Earned</h3>
-                    <p id="totalEarned">[X,XXX.XX] Points</p>
+                <div id="dashboard-overview-message" class="message mt-4"></div>
+            </section>
+
+            <section id="surveys-section" class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 pb-4 border-b border-gray-200">Earn More Points: Available Surveys</h2>
+                <div id="surveysList" class="space-y-4">
+                    <p class="empty-state text-gray-500 italic">No more surveys available at the moment. Check back soon!</p>
                 </div>
-                <div>
-                    <h3>Pending Redemptions</h3>
-                    <p id="pendingRedemptions">[X] Requests</p>
+                <div id="surveys-section-message" class="message mt-4"></div>
+            </section>
+
+            <section id="transfer-points-section" class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 pb-4 border-b border-gray-200">Transfer Points to Another User</h2>
+                <form id="transferPointsForm" class="space-y-4 p-6 bg-gray-50 rounded-lg border border-gray-200">
+                    <div>
+                        <label for="recipientEmail" class="block text-sm font-medium text-gray-700 mb-1">Recipient's Email</label>
+                        <input type="email" id="recipientEmail" name="recipientEmail" required class="form-input">
+                    </div>
+                    <div>
+                        <label for="transferAmount" class="block text-sm font-medium text-gray-700 mb-1">Amount to Transfer</label>
+                        <input type="number" id="transferAmount" name="transferAmount" min="1" step="0.01" required class="form-input">
+                    </div>
+                    <button type="submit" class="btn-primary self-start">Initiate Transfer</button>
+                </form>
+                <div id="transfer-points-section-message" class="message mt-4"></div>
+
+                <h3 class="text-xl font-semibold text-gray-800 mt-8 mb-4">Your Point Transfer History</h3>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg shadow-sm border border-gray-200">
+                        <thead>
+                            <tr>
+                                <th class="py-3 px-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Date</th>
+                                <th class="py-3 px-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Type</th>
+                                <th class="py-3 px-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Recipient/Sender</th>
+                                <th class="py-3 px-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transferHistoryTableBody" class="divide-y divide-gray-100">
+                            <!-- Transfer history will be dynamically inserted here by dashboard.js -->
+                        </tbody>
+                    </table>
                 </div>
-            </div>
-            <div class="flex gap-4 mt-6">
-                <button class="button primary" onclick="document.querySelector('#surveys-section').scrollIntoView({behavior: 'smooth'});">Take a Survey</button>
-                <button class="button primary" onclick="document.querySelector('#transfer-points-section').scrollIntoView({behavior: 'smooth'});">Transfer Points</button>
-                <button class="button primary" onclick="document.querySelector('#redeem-points-section').scrollIntoView({behavior: 'smooth'});">Redeem Points</button>
-            </div>
-            <div id="dashboard-overview-message" class="message"></div>
-        </section>
+                <p id="transferHistoryEmptyState" class="empty-state text-gray-500 italic mt-4">No transfer history yet.</p>
+            </section>
 
-        <section id="surveys-section">
-            <h2>Earn More Points: Available Surveys</h2>
-            <div id="surveysList">
-                <!-- Survey items will be dynamically inserted here by dashboard.js -->
-                <p class="empty-state">No more surveys available at the moment. Check back soon!</p>
-            </div>
-            <div id="surveys-section-message" class="message"></div>
-        </section>
-
-        <section id="transfer-points-section">
-            <h2>Transfer Points to Another User</h2>
-            <form id="transferPointsForm">
-                <div>
-                    <label for="recipientEmail">Recipient's Email</label>
-                    <input type="email" id="recipientEmail" name="recipientEmail" required>
+            <section id="redeem-points-section" class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 pb-4 border-b border-gray-200">Redeem Your Points</h2>
+                <div class="mb-6 p-4 bg-emerald-50 rounded-lg border border-emerald-200">
+                    <h3 class="text-xl font-semibold text-emerald-700 mb-3">Current Redemption Rates</h3>
+                    <p class="text-lg text-emerald-600 mb-1"><strong><span id="bitcoinRate">1 Point = [0.00001] BTC</span></strong></p>
+                    <p class="text-lg text-emerald-600"><strong><span id="giftCardRate">1 Point = [$0.01] USD (Gift Card Equivalent)</span></strong></p>
                 </div>
-                <div>
-                    <label for="transferAmount">Amount to Transfer</label>
-                    <input type="number" id="transferAmount" name="transferAmount" min="1" step="0.01" required>
+
+                <form id="redemptionRequestForm" class="space-y-4 p-6 bg-gray-50 rounded-lg border border-gray-200">
+                    <div>
+                        <label for="redemptionType" class="block text-sm font-medium text-gray-700 mb-1">Redemption Type</label>
+                        <select id="redemptionType" name="redemptionType" required class="form-input">
+                            <option value="bitcoin">Bitcoin</option>
+                            <option value="gift_card">Gift Card</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="pointsAmount" class="block text-sm font-medium text-gray-700 mb-1">Points to Redeem</label>
+                        <input type="number" id="pointsAmount" name="pointsAmount" min="1" step="0.01" required class="form-input">
+                    </div>
+                    <div id="walletAddressField">
+                        <label for="walletAddress" class="block text-sm font-medium text-gray-700 mb-1">Your Bitcoin Wallet Address</label>
+                        <input type="text" id="walletAddress" name="walletAddress" class="form-input">
+                    </div>
+                    <div id="emailAddressField" style="display:none;">
+                        <label for="emailAddress" class="block text-sm font-medium text-gray-700 mb-1">Recipient Email for Gift Card</label>
+                        <input type="email" id="emailAddress" name="emailAddress" class="form-input">
+                    </div>
+                    <button type="submit" class="btn-primary self-start">Request Redemption</button>
+                </form>
+                <div id="redeem-points-section-message" class="message mt-4"></div>
+
+                <h3 class="text-xl font-semibold text-gray-800 mt-8 mb-4">Your Redemption History</h3>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg shadow-sm border border-gray-200">
+                        <thead>
+                            <tr>
+                                <th class="py-3 px-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Date</th>
+                                <th class="py-3 px-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Type</th>
+                                <th class="py-3 px-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Points</th>
+                                <th class="py-3 px-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Equivalent Value</th>
+                                <th class="py-3 px-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="redemptionHistoryTableBody" class="divide-y divide-gray-100">
+                            <!-- Redemption history will be dynamically inserted here by dashboard.js -->
+                        </tbody>
+                    </table>
                 </div>
-                <button type="submit" class="button primary">Initiate Transfer</button>
-            </form>
-            <div id="transfer-points-section-message" class="message"></div>
+                <p id="redemptionHistoryEmptyState" class="empty-state text-gray-500 italic mt-4">No redemption history yet.</p>
+            </section>
 
-            <h3>Your Point Transfer History</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Type</th>
-                        <th>Recipient/Sender</th>
-                        <th>Amount</th>
-                    </tr>
-                </thead>
-                <tbody id="transferHistoryTableBody">
-                    <!-- Transfer history will be dynamically inserted here by dashboard.js -->
-                </tbody>
-            </table>
-            <p id="transferHistoryEmptyState" class="empty-state">No transfer history yet.</p>
-        </section>
-
-        <section id="redeem-points-section">
-            <h2>Redeem Your Points</h2>
-            <div>
-                <h3>Current Redemption Rates</h3>
-                <p><strong><span id="bitcoinRate">1 Point = [0.00001] BTC</span></strong></p>
-                <p><strong><span id="giftCardRate">1 Point = [$0.01] USD (Gift Card Equivalent)</span></strong></p>
-            </div>
-
-            <h3>Redeem for Bitcoin</h3>
-            <form id="bitcoinRedemptionForm">
-                <div>
-                    <label for="btcPointsAmount">Points to Redeem</label>
-                    <input type="number" id="btcPointsAmount" name="btcPointsAmount" min="1" step="0.01" required>
+            <section id="profile-settings-section" class="bg-white rounded-lg shadow-md p-6">
+                <h2 class="text-2xl font-bold text-gray-800 mb-6 pb-4 border-b border-gray-200">Your Profile & Account Settings</h2>
+                <div class="space-y-3 mb-6">
+                    <h3 class="text-xl font-semibold text-gray-800">Personal Information</h3>
+                    <p class="text-lg"><strong class="text-gray-700">Name:</strong> <span id="profileName" class="text-gray-600">[User Name]</span></p>
+                    <p class="text-lg"><strong class="text-gray-700">Email:</strong> <span id="profileEmail" class="text-gray-600">[user@example.com]</span></p>
+                    <p class="text-lg"><strong class="text-gray-700">Referral Code:</strong> <span id="profileReferralCode" class="text-gray-600">[ABC123XYZ]</span></p>
                 </div>
-                <div>
-                    <label for="bitcoinWalletAddress">Your Bitcoin Wallet Address</label>
-                    <input type="text" id="bitcoinWalletAddress" name="bitcoinWalletAddress" required>
+
+                <div class="flex flex-col sm:flex-row gap-4 mt-6">
+                    <button id="resetPinButton" class="btn-secondary">Reset PIN</button>
+                    <button id="changePasswordButton" class="btn-secondary">Change Password</button>
                 </div>
-                <button type="submit" class="button primary">Request Bitcoin Redemption</button>
-            </form>
 
-            <h3>Redeem for Gift Card</h3>
-            <form id="giftCardRedemptionForm">
-                <div>
-                    <label for="gcPointsAmount">Points to Redeem</label>
-                    <input type="number" id="gcPointsAmount" name="gcPointsAmount" min="1" step="0.01" required>
+                <h3 class="text-xl font-semibold text-gray-800 mt-8 mb-4">Recent Activity Log</h3>
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white rounded-lg shadow-sm border border-gray-200">
+                        <thead>
+                            <tr>
+                                <th class="py-3 px-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Date & Time</th>
+                                <th class="py-3 px-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Action</th>
+                                <th class="py-3 px-4 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Details</th>
+                            </tr>
+                        </thead>
+                        <tbody id="activityLogTableBody" class="divide-y divide-gray-100">
+                            <!-- Activity log will be dynamically inserted here by dashboard.js -->
+                        </tbody>
+                    </table>
                 </div>
-                <div>
-                    <label for="giftCardEmail">Recipient Email for Gift Card</label>
-                    <input type="email" id="giftCardEmail" name="giftCardEmail" required>
-                </div>
-                <button type="submit" class="button primary">Request Gift Card Redemption</button>
-            </form>
-            <div id="redeem-points-section-message" class="message"></div>
-
-            <h3>Your Redemption History</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Date</th>
-                        <th>Type</th>
-                        <th>Points</th>
-                        <th>Equivalent Value</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody id="redemptionHistoryTableBody">
-                    <!-- Redemption history will be dynamically inserted here by dashboard.js -->
-                </tbody>
-            </table>
-            <p id="redemptionHistoryEmptyState" class="empty-state">No redemption history yet.</p>
-        </section>
-
-        <section id="profile-settings-section">
-            <h2>Your Profile & Account Settings</h2>
-            <div>
-                <h3>Personal Information</h3>
-                <p><strong>Name:</strong> <span id="profileName">[User Name]</span></p>
-                <p><strong>Email:</strong> <span id="profileEmail">[user@example.com]</span></p>
-                <p><strong>Referral Code:</strong> <span id="profileReferralCode">[ABC123XYZ]</span></p>
-            </div>
-
-            <div class="flex gap-4 mt-6">
-                <button id="resetPinButton" class="button secondary">Reset PIN</button>
-                <button id="changePasswordButton" class="button secondary">Change Password</button>
-            </div>
-
-            <h3>Recent Activity Log</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Date & Time</th>
-                        <th>Action</th>
-                        <th>Details</th>
-                    </tr>
-                </thead>
-                <tbody id="activityLogTableBody">
-                    <!-- Activity log will be dynamically inserted here by dashboard.js -->
-                </tbody>
-            </table>
-            <p id="activityLogEmptyState" class="empty-state">No recent activity.</p>
-        </section>
+                <p id="activityLogEmptyState" class="empty-state text-gray-500 italic mt-4">No recent activity.</p>
+            </section>
+        </div>
     </main>
 
-    <footer>
+    <footer class="bg-gray-900 text-gray-400 py-6 text-center text-sm border-t border-gray-700">
         <p>&copy; 2025 Reward System. All rights reserved.</p>
     </footer>
+    <script src="app.js"></script>
     <script src="dashboard.js"></script>
 </body>
 </html>
