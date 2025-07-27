@@ -70,7 +70,7 @@ async function apiCall(endpoint, method = "GET", data = null, requiresAuth = fal
   if (requiresAuth) {
     const token = getAuthToken()
     if (!token) {
-      window.location.href = "index.html" // Redirect to login if no token
+      window.location.href = "../login" // Redirect to login if no token
       throw new Error("No authentication token found. Please log in.")
     }
     options.headers["Authorization"] = `Bearer ${token}`
@@ -103,7 +103,7 @@ async function handleLoginForm(event) {
     const response = await apiCall("/auth/login", "POST", { email, password })
     saveAuthData(response.access_token, response.user)
     displayMessage("message", "Login successful!", true)
-    window.location.href = "pin-verify-login.html" // Redirect to PIN verification
+    window.location.href = "../pin-verify-login" // Redirect to PIN verification
   } catch (error) {
     displayMessage("message", error.message || "Login failed. Please check your credentials.", false)
   }
@@ -136,7 +136,7 @@ async function handleSignupForm(event) {
     await apiCall("/auth/request-otp", "POST", { email, purpose: "signup" })
     displayMessage("message", "OTP sent to your email. Redirecting to OTP verification...", true)
     setTimeout(() => {
-      window.location.href = "signup-otp.html"
+      window.location.href = "../signup-otp"
     }, 1500)
   } catch (error) {
     displayMessage("message", error.message || "Failed to request OTP.", false)
@@ -152,7 +152,7 @@ async function handleOtpVerifyForm(event) {
 
   if (!tempSignupData || !tempSignupData.email) {
     displayMessage("message", "Session expired or invalid. Please start signup again.", false)
-    setTimeout(() => (window.location.href = "signup.html"), 2000)
+    setTimeout(() => (window.location.href = "../signup"), 2000)
     return
   }
 
@@ -216,7 +216,7 @@ async function handleCreatePinForm(event) {
 
   if (!tempSignupData || !tempSignupData.email) {
     displayMessage("message", "Signup session expired. Please start again.", false)
-    setTimeout(() => (window.location.href = "signup.html"), 2000)
+    setTimeout(() => (window.location.href = "../signup"), 2000)
     return
   }
 
@@ -231,7 +231,7 @@ async function handleCreatePinForm(event) {
     await apiCall("/auth/signup", "POST", fullSignupData)
     displayMessage("message", "Account created and PIN set successfully! Redirecting to login...", true)
     sessionStorage.removeItem("tempSignupData") // Clean up temporary data
-    setTimeout(() => (window.location.href = "index.html"), 2000)
+    setTimeout(() => (window.location.href = "../login"), 2000)
   } catch (error) {
     displayMessage("message", error.message || "Failed to create account or set PIN.", false)
   }
@@ -313,7 +313,7 @@ async function handlePinVerifyLoginForm(event) {
   try {
     await apiCall("/auth/verify-pin", "POST", { pin }, true) // Requires auth token
     displayMessage("message", "PIN verified. Accessing dashboard...", true)
-    window.location.href = "dashboard.html" // Redirect to dashboard
+    window.location.href = "../dashboard" // Redirect to dashboard
   } catch (error) {
     displayMessage("message", error.message || "Invalid PIN. Please try again.", false)
   }
@@ -321,7 +321,7 @@ async function handlePinVerifyLoginForm(event) {
 
 function handleLogoutButton() {
   clearAuthData()
-  window.location.href = "index.html" // Redirect to login page
+  window.location.href = "../login" // Redirect to login page
 }
 
 async function handlePinResetForm(event) {
@@ -335,7 +335,7 @@ async function handlePinResetForm(event) {
     await apiCall("/auth/request-otp", "POST", { email, purpose: "pin_reset" })
     displayMessage("message", "PIN reset OTP sent. Redirecting...", true)
     setTimeout(() => {
-      window.location.href = "pin-reset-otp.html"
+      window.location.href = "../pin-reset-otp"
     }, 1500)
   } catch (error) {
     displayMessage("message", error.message || "Failed to request PIN reset OTP.", false)
@@ -351,7 +351,7 @@ async function handlePinResetOtpVerifyForm(event) {
 
   if (!email) {
     displayMessage("message", "Session expired or invalid. Please go back to PIN reset.", false)
-    setTimeout(() => (window.location.href = "pin-reset.html"), 2000)
+    setTimeout(() => (window.location.href = "../pin-reset"), 2000)
     return
   }
 
@@ -359,7 +359,7 @@ async function handlePinResetOtpVerifyForm(event) {
     await apiCall("/auth/verify-otp", "POST", { email, otp_code: otpCode, purpose: "pin_reset" })
     displayMessage("message", "OTP verified. Redirecting to set new PIN...", true)
     setTimeout(() => {
-      window.location.href = "set-new-pin.html"
+      window.location.href = "../set-new-pin"
     }, 1500)
   } catch (error) {
     displayMessage("message", error.message || "OTP verification failed.", false)
@@ -384,7 +384,7 @@ async function handleSetNewPinForm(event) {
   }
   if (!email) {
     displayMessage("message", "Session expired or invalid. Please restart PIN reset.", false)
-    setTimeout(() => (window.location.href = "pin-reset.html"), 2000)
+    setTimeout(() => (window.location.href = "../pin-reset), 2000)
     return
   }
 
