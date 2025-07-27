@@ -10,19 +10,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (loginButton) {
     loginButton.addEventListener("click", () => {
-      window.location.href = "index.html" // Redirect to your login page
+      window.location.href = "../login" // Redirect to your login page
     })
   }
 
   if (signupButton) {
     signupButton.addEventListener("click", () => {
-      window.location.href = "signup.html" // Redirect to your signup page
+      window.location.href = "../signup" // Redirect to your signup page
     })
   }
 
   if (heroGetStartedButton) {
     heroGetStartedButton.addEventListener("click", () => {
-      window.location.href = "signup.html" // Redirect to signup
+      window.location.href = "../signup" // Redirect to signup
     })
   }
 
@@ -37,7 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (ctaSignupButton) {
     ctaSignupButton.addEventListener("click", () => {
-      window.location.href = "signup.html" // Redirect to signup
+      window.location.href = "../signup" // Redirect to signup
     })
   }
 
