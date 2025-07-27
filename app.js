@@ -335,7 +335,7 @@ async function handlePinResetForm(event) {
     await apiCall("/auth/request-otp", "POST", { email, purpose: "pin_reset" })
     displayMessage("message", "PIN reset OTP sent. Redirecting...", true)
     setTimeout(() => {
-      window.location.href = "pin-reset-otp.html"
+      window.location.href = "../pin-reset-otp"
     }, 1500)
   } catch (error) {
     displayMessage("message", error.message || "Failed to request PIN reset OTP.", false)
