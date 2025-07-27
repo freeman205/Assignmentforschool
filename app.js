@@ -103,7 +103,7 @@ async function handleLoginForm(event) {
     const response = await apiCall("/auth/login", "POST", { email, password })
     saveAuthData(response.access_token, response.user)
     displayMessage("message", "Login successful!", true)
-    window.location.href = "pin-verify-login.html" // Redirect to PIN verification
+    window.location.href = "../pin-verify-login" // Redirect to PIN verification
   } catch (error) {
     displayMessage("message", error.message || "Login failed. Please check your credentials.", false)
   }
@@ -136,7 +136,7 @@ async function handleSignupForm(event) {
     await apiCall("/auth/request-otp", "POST", { email, purpose: "signup" })
     displayMessage("message", "OTP sent to your email. Redirecting to OTP verification...", true)
     setTimeout(() => {
-      window.location.href = "signup-otp.html"
+      window.location.href = "../signup-otp"
     }, 1500)
   } catch (error) {
     displayMessage("message", error.message || "Failed to request OTP.", false)
@@ -152,7 +152,7 @@ async function handleOtpVerifyForm(event) {
 
   if (!tempSignupData || !tempSignupData.email) {
     displayMessage("message", "Session expired or invalid. Please start signup again.", false)
-    setTimeout(() => (window.location.href = "signup.html"), 2000)
+    setTimeout(() => (window.location.href = "../signup"), 2000)
     return
   }
 
@@ -161,7 +161,7 @@ async function handleOtpVerifyForm(event) {
     displayMessage("message", "OTP verified. Redirecting to create your PIN...", true)
     // OTP is verified, now redirect to PIN creation page
     setTimeout(() => {
-      window.location.href = "create-pin.html" // Redirect to the PIN creation page
+      window.location.href = "../create-pin" // Redirect to the PIN creation page
     }, 1500)
   } catch (error) {
     displayMessage("message", error.message || "OTP verification failed.", false)
@@ -231,7 +231,7 @@ async function handleCreatePinForm(event) {
     await apiCall("/auth/signup", "POST", fullSignupData)
     displayMessage("message", "Account created and PIN set successfully! Redirecting to login...", true)
     sessionStorage.removeItem("tempSignupData") // Clean up temporary data
-    setTimeout(() => (window.location.href = "index.html"), 2000)
+    setTimeout(() => (window.location.href = "../login"), 2000)
   } catch (error) {
     displayMessage("message", error.message || "Failed to create account or set PIN.", false)
   }
@@ -248,7 +248,7 @@ async function handleForgotPasswordForm(event) {
     await apiCall("/auth/request-otp", "POST", { email, purpose: "password_reset" })
     displayMessage("message", "Password reset OTP sent. Redirecting...", true)
     setTimeout(() => {
-      window.location.href = "forgot-password-otp.html"
+      window.location.href = "../forgot-password-otp"
     }, 1500)
   } catch (error) {
     displayMessage("message", error.message || "Failed to request password reset OTP.", false)
