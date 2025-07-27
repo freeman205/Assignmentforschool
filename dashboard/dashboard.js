@@ -20,7 +20,6 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // --- DOM Elements ---
   const userNameElement = document.getElementById("userName")
-  const logoutButton = document.getElementById("logoutButton")
   const mobileMenuButton = document.getElementById("mobileMenuButton")
   const sidebar = document.getElementById("sidebar")
 
@@ -51,6 +50,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const profileReferralCodeElement = document.getElementById("profileReferralCode")
   const resetPinButton = document.getElementById("resetPinButton")
   const changePasswordButton = document.getElementById("changePasswordButton")
+  const logoutButton = document.getElementById("logoutButton") // Get the logout button from sidebar
   const activityLogTableBody = document.getElementById("activityLogTableBody")
   const activityLogEmptyState = document.getElementById("activityLogEmptyState")
 
@@ -94,6 +94,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // Close sidebar when clicking outside on mobile
   document.body.addEventListener("click", (event) => {
+    // Check if sidebar is open, and if the click is outside the sidebar and not on the menu button
     if (
       document.body.classList.contains("sidebar-open") &&
       !sidebar.contains(event.target) &&
@@ -104,18 +105,30 @@ document.addEventListener("DOMContentLoaded", async () => {
   })
 
   // Close sidebar on navigation link click (mobile)
-  document.querySelectorAll("aside nav a.nav-link").forEach((anchor) => {
-    anchor.addEventListener("click", function (e) {
-      e.preventDefault()
-      const targetId = this.getAttribute("href").substring(1) // Remove '#'
-      document.getElementById(targetId).scrollIntoView({
-        behavior: "smooth",
-      })
-      // Update active class
-      document.querySelectorAll("aside nav a.nav-link").forEach((link) => link.classList.remove("active"))
-      this.classList.add("active")
+  document.querySelectorAll("aside nav a.nav-link, aside nav button.nav-link").forEach((element) => {
+    element.addEventListener("click", function (e) {
+      // Only prevent default for anchor tags that scroll to a section
+      if (this.tagName === "A" && this.getAttribute("href").startsWith("#")) {
+        e.preventDefault()
+        const targetId = this.getAttribute("href").substring(1) // Remove '#'
+        document.getElementById(targetId).scrollIntoView({
+          behavior: "smooth",
+        })
+      }
 
-      // Close sidebar on mobile after clicking a link
+      // Update active class for all nav links
+      document.querySelectorAll("aside nav a.nav-link").forEach((link) => link.classList.remove("active"))
+      // For buttons, find the closest anchor or apply active to the button itself if it's a primary nav item
+      if (this.tagName === "A") {
+        this.classList.add("active")
+      } else {
+        // For buttons like Reset PIN, Change Password, Logout
+        // If these buttons are considered primary navigation, they can get active class
+        // For now, they don't directly correspond to a main content section, so no active class.
+        // If they were to open a modal or a new page, the active state logic would differ.
+      }
+
+      // Close sidebar on mobile after clicking a link/button
       if (window.innerWidth < 768) {
         // Assuming 768px is your md breakpoint
         document.body.classList.remove("sidebar-open")
@@ -402,4 +415,4 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Initial call to set correct field visibility on page load for redemption form
   toggleRedemptionFields()
 })
-          
+                
