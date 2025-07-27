@@ -1,22 +1,70 @@
 /* styles.css */
-@import url("https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css");
 
-/* Custom styles for a professional look */
+/* Custom Font */
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+/* Define CSS Variables for a consistent color palette */
+:root {
+  /* Primary Colors (Emerald) */
+  --color-primary-50: #ecfdf5;
+  --color-primary-100: #d1fae5;
+  --color-primary-200: #a7f3d0;
+  --color-primary-300: #6ee7b7;
+  --color-primary-400: #34d399;
+  --color-primary-500: #10b981; /* Base Emerald */
+  --color-primary-600: #059669; /* Darker Emerald for buttons/accents */
+  --color-primary-700: #047857;
+  --color-primary-800: #065f46;
+  --color-primary-900: #064e3b;
+
+  /* Gray Colors */
+  --color-gray-50: #f9fafb; /* Lightest background */
+  --color-gray-100: #f3f4f6;
+  --color-gray-200: #e5e7eb; /* Light borders/secondary backgrounds */
+  --color-gray-300: #d1d5db;
+  --color-gray-400: #9ca3af;
+  --color-gray-500: #6b7280;
+  --color-gray-600: #4b5563;
+  --color-gray-700: #374151; /* Default text color */
+  --color-gray-800: #1f2937; /* Darker text/headings */
+  --color-gray-900: #111827; /* Very dark for footers/strong elements */
+
+  /* Status Colors */
+  --color-success: #22c55e; /* Green */
+  --color-error: #ef4444; /* Red */
+  --color-warning: #f59e0b; /* Amber */
+  --color-info: #3b82f6; /* Blue */
+
+  /* General Backgrounds & Text */
+  --background-color: var(--color-gray-50);
+  --surface-color: var(--color-primary-50); /* For cards, forms, etc. */
+  --text-color-default: var(--color-gray-700);
+  --text-color-heading: var(--color-gray-800);
+  --text-color-light: var(--color-gray-500);
+  --text-color-inverted: var(--color-light-text); /* For dark backgrounds */
+
+  /* Borders & Shadows */
+  --border-color-light: var(--color-gray-200);
+  --border-color-dark: var(--color-gray-300);
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+/* Global Body and Layout */
 body {
-  font-family: "Inter", sans-serif; /* A modern, clean font */
+  font-family: "Inter", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* Ensure body takes full height and centers content */
-  display: flex;
-  align-items: center;
-  justify-content: center;
   min-height: 100vh;
-  background-color: #f9fafb; /* Light gray background */
+  background-color: var(--background-color);
+  color: var(--text-color-default);
+  line-height: 1.6; /* Improved readability */
 }
 
 /* General form container styling */
 .bg-white {
-  background-color: #ffffff;
+  background-color: #ffffff; /* Keep explicit white for forms/modals */
 }
 
 .p-8 {
@@ -28,11 +76,11 @@ body {
 }
 
 .shadow-lg {
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--shadow-lg);
 }
 
 .max-w-md {
-  max-width: 28rem; /* Equivalent to 448px */
+  max-width: 28rem;
 }
 
 .w-full {
@@ -40,8 +88,19 @@ body {
 }
 
 /* Headings */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--text-color-heading);
+  font-weight: 700;
+  line-height: 1.2;
+}
+
 .text-3xl {
-  font-size: 1.875rem; /* 30px */
+  font-size: 1.875rem;
 }
 
 .font-bold {
@@ -50,10 +109,6 @@ body {
 
 .text-center {
   text-align: center;
-}
-
-.text-gray-800 {
-  color: #1f2937;
 }
 
 .mb-6 {
@@ -73,7 +128,7 @@ body {
 }
 
 .text-sm {
-  font-size: 0.875rem; /* 14px */
+  font-size: 0.875rem;
 }
 
 .font-medium {
@@ -81,7 +136,7 @@ body {
 }
 
 .text-gray-700 {
-  color: #374151;
+  color: var(--color-gray-700);
 }
 
 .mb-1 {
@@ -89,551 +144,99 @@ body {
 }
 
 /* Inputs */
-.px-4 {
-  padding-left: 1rem;
-  padding-right: 1rem;
+input[type="email"],
+input[type="password"],
+input[type="text"],
+input[type="number"] {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border-color-dark);
+  border-radius: 0.375rem;
+  font-size: 1rem;
+  color: var(--text-color-heading);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.py-2 {
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-}
-
-.border {
-  border-width: 1px;
-}
-
-.border-gray-300 {
-  border-color: #d1d5db;
-}
-
-.focus\:ring-emerald-500:focus {
-  --tw-ring-color: #10b981; /* Emerald 500 */
-  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  border-color: #10b981; /* Emerald 500 */
-}
-
-.focus\:border-emerald-500:focus {
-  border-color: #10b981; /* Emerald 500 */
+input:focus {
+  outline: none;
+  border-color: var(--color-primary-500);
+  box-shadow: 0 0 0 3px var(--color-primary-200); /* Softer focus ring */
 }
 
 /* Buttons */
-.bg-emerald-600 {
-  background-color: #059669; /* Emerald 600 */
-}
-
-.text-white {
-  color: #ffffff;
-}
-
-.hover\:bg-emerald-700:hover {
-  background-color: #047857; /* Emerald 700 */
-}
-
-.focus\:outline-none:focus {
-  outline: 0;
-}
-
-.focus\:ring-2:focus {
-  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width, 0px) var(--tw-ring-offset-color, #fff);
-  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width, 0px)) var(--tw-ring-color);
-  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
-}
-
-.focus\:ring-offset-2:focus {
-  --tw-ring-offset-width: 2px;
-}
-
-.focus\:ring-emerald-500:focus {
-  --tw-ring-color: #10b981; /* Emerald 500 */
-}
-
-/* Message display */
-.text-red-500 {
-  color: #ef4444;
-}
-
-.text-green-500 {
-  color: #22c55e;
-}
-
-/* Links */
-.text-emerald-600 {
-  color: #059669;
-}
-
-.hover\:text-emerald-800:hover {
-  color: #065f46;
-}
-
-.font-medium {
-  font-weight: 500;
-}
-
-/* Specific styles for resend OTP button */
-.bg-gray-200 {
-  background-color: #e5e7eb;
-}
-
-.text-gray-800 {
-  color: #1f2937;
-}
-
-.hover\:bg-gray-300:hover {
-  background-color: #d1d5db;
-}
-
-.focus\:ring-gray-400:focus {
-  --tw-ring-color: #9ca3af;
-}
-
-/* Logout button specific style */
-.bg-red-500 {
-  background-color: #ef4444;
-}
-
-.hover\:bg-red-600:hover {
-  background-color: #dc2626;
-}
-
-.focus\:ring-red-500:focus {
-  --tw-ring-color: #ef4444;
-}
-
-/* Flex utilities for pin-verify-login.html */
-.flex {
-  display: flex;
-}
-
-.justify-between {
-  justify-content: space-between;
-}
-
-.items-center {
-  align-items: center;
-}
-
-.mt-6 {
-  margin-top: 1.5rem;
-}
-/* Custom styles for a professional look */
-body {
-  font-family: "Inter", sans-serif; /* A modern, clean font */
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  /* Ensure body takes full height and centers content */
-  display: flex;
+button,
+.button {
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
-  background-color: #f9fafb; /* Light gray background */
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  border: none;
+  text-decoration: none;
+  font-size: 1rem;
 }
 
-/* General form container styling */
-.bg-white {
-  background-color: #ffffff;
-}
-
-.p-8 {
-  padding: 2rem;
-}
-
-.rounded-lg {
-  border-radius: 0.5rem;
-}
-
-.shadow-lg {
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-}
-
-.max-w-md {
-  max-width: 28rem; /* Equivalent to 448px */
-}
-
-.w-full {
-  width: 100%;
-}
-
-/* Headings */
-.text-3xl {
-  font-size: 1.875rem; /* 30px */
-}
-
-.font-bold {
-  font-weight: 700;
-}
-
-.text-center {
-  text-align: center;
-}
-
-.text-gray-800 {
-  color: #1f2937;
-}
-
-.mb-6 {
-  margin-bottom: 1.5rem;
-}
-
-/* Form spacing */
-.space-y-6 > :not([hidden]) ~ :not([hidden]) {
-  --tw-space-y-reverse: 0;
-  margin-top: calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));
-  margin-bottom: calc(1.5rem * var(--tw-space-y-reverse));
-}
-
-/* Labels */
-.block {
-  display: block;
-}
-
-.text-sm {
-  font-size: 0.875rem; /* 14px */
-}
-
-.font-medium {
-  font-weight: 500;
-}
-
-.text-gray-700 {
-  color: #374151;
-}
-
-.mb-1 {
-  margin-bottom: 0.25rem;
-}
-
-/* Inputs */
-.px-4 {
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
-
-.py-2 {
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-}
-
-.border {
-  border-width: 1px;
-}
-
-.border-gray-300 {
-  border-color: #d1d5db;
-}
-
-.focus\:ring-emerald-500:focus {
-  --tw-ring-color: #10b981; /* Emerald 500 */
-  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  border-color: #10b981; /* Emerald 500 */
-}
-
-.focus\:border-emerald-500:focus {
-  border-color: #10b981; /* Emerald 500 */
-}
-
-/* Buttons */
 .bg-emerald-600 {
-  background-color: #059669; /* Emerald 600 */
+  background-color: var(--color-primary-600);
 }
 
 .text-white {
-  color: #ffffff;
+  color: var(--color-light-text);
 }
 
 .hover\:bg-emerald-700:hover {
-  background-color: #047857; /* Emerald 700 */
-}
-
-.focus\:outline-none:focus {
-  outline: 0;
-}
-
-.focus\:ring-2:focus {
-  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width, 0px) var(--tw-ring-offset-color, #fff);
-  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width, 0px)) var(--tw-ring-color);
-  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
-}
-
-.focus\:ring-offset-2:focus {
-  --tw-ring-offset-width: 2px;
-}
-
-.focus\:ring-emerald-500:focus {
-  --tw-ring-color: #10b981; /* Emerald 500 */
+  background-color: var(--color-primary-700);
 }
 
 /* Message display */
+.message {
+  margin-top: 1rem;
+  text-align: center;
+  font-size: 0.875rem;
+}
+
 .text-red-500 {
-  color: #ef4444;
+  color: var(--color-error);
 }
 
 .text-green-500 {
-  color: #22c55e;
+  color: var(--color-success);
 }
 
 /* Links */
-.text-emerald-600 {
-  color: #059669;
+a {
+  color: var(--color-primary-600);
+  text-decoration: none;
+  transition: color 0.2s ease;
 }
 
-.hover\:text-emerald-800:hover {
-  color: #065f46;
-}
-
-.font-medium {
-  font-weight: 500;
+a:hover {
+  color: var(--color-primary-800);
 }
 
 /* Specific styles for resend OTP button */
 .bg-gray-200 {
-  background-color: #e5e7eb;
+  background-color: var(--color-gray-200);
 }
 
 .text-gray-800 {
-  color: #1f2937;
+  color: var(--color-gray-800);
 }
 
 .hover\:bg-gray-300:hover {
-  background-color: #d1d5db;
-}
-
-.focus\:ring-gray-400:focus {
-  --tw-ring-color: #9ca3af;
+  background-color: var(--color-gray-300);
 }
 
 /* Logout button specific style */
 .bg-red-500 {
-  background-color: #ef4444;
+  background-color: var(--color-error);
 }
 
 .hover\:bg-red-600:hover {
-  background-color: #dc2626;
-}
-
-.focus\:ring-red-500:focus {
-  --tw-ring-color: #ef4444;
-}
-
-/* Flex utilities for pin-verify-login.html */
-.flex {
-  display: flex;
-}
-
-.justify-between {
-  justify-content: space-between;
-}
-
-.items-center {
-  align-items: center;
-}
-
-.mt-6 {
-  margin-top: 1.5rem;
-}
-/* Custom styles for a professional look */
-body {
-  font-family: "Inter", sans-serif; /* A modern, clean font */
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  /* Ensure body takes full height and centers content */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  background-color: #f9fafb; /* Light gray background */
-}
-
-/* General form container styling */
-.bg-white {
-  background-color: #ffffff;
-}
-
-.p-8 {
-  padding: 2rem;
-}
-
-.rounded-lg {
-  border-radius: 0.5rem;
-}
-
-.shadow-lg {
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-}
-
-.max-w-md {
-  max-width: 28rem; /* Equivalent to 448px */
-}
-
-.w-full {
-  width: 100%;
-}
-
-/* Headings */
-.text-3xl {
-  font-size: 1.875rem; /* 30px */
-}
-
-.font-bold {
-  font-weight: 700;
-}
-
-.text-center {
-  text-align: center;
-}
-
-.text-gray-800 {
-  color: #1f2937;
-}
-
-.mb-6 {
-  margin-bottom: 1.5rem;
-}
-
-/* Form spacing */
-.space-y-6 > :not([hidden]) ~ :not([hidden]) {
-  --tw-space-y-reverse: 0;
-  margin-top: calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));
-  margin-bottom: calc(1.5rem * var(--tw-space-y-reverse));
-}
-
-/* Labels */
-.block {
-  display: block;
-}
-
-.text-sm {
-  font-size: 0.875rem; /* 14px */
-}
-
-.font-medium {
-  font-weight: 500;
-}
-
-.text-gray-700 {
-  color: #374151;
-}
-
-.mb-1 {
-  margin-bottom: 0.25rem;
-}
-
-/* Inputs */
-.px-4 {
-  padding-left: 1rem;
-  padding-right: 1rem;
-}
-
-.py-2 {
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-}
-
-.border {
-  border-width: 1px;
-}
-
-.border-gray-300 {
-  border-color: #d1d5db;
-}
-
-.focus\:ring-emerald-500:focus {
-  --tw-ring-color: #10b981; /* Emerald 500 */
-  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  border-color: #10b981; /* Emerald 500 */
-}
-
-.focus\:border-emerald-500:focus {
-  border-color: #10b981; /* Emerald 500 */
-}
-
-/* Buttons */
-.bg-emerald-600 {
-  background-color: #059669; /* Emerald 600 */
-}
-
-.text-white {
-  color: #ffffff;
-}
-
-.hover\:bg-emerald-700:hover {
-  background-color: #047857; /* Emerald 700 */
-}
-
-.focus\:outline-none:focus {
-  outline: 0;
-}
-
-.focus\:ring-2:focus {
-  --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width, 0px) var(--tw-ring-offset-color, #fff);
-  --tw-ring-shadow: var(--tw-ring-inset) 0 0 0 calc(2px + var(--tw-ring-offset-width, 0px)) var(--tw-ring-color);
-  box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000);
-}
-
-.focus\:ring-offset-2:focus {
-  --tw-ring-offset-width: 2px;
-}
-
-.focus\:ring-emerald-500:focus {
-  --tw-ring-color: #10b981; /* Emerald 500 */
-}
-
-/* Message display */
-.text-red-500 {
-  color: #ef4444;
-}
-
-.text-green-500 {
-  color: #22c55e;
-}
-
-/* Links */
-.text-emerald-600 {
-  color: #059669;
-}
-
-.hover\:text-emerald-800:hover {
-  color: #065f46;
-}
-
-.font-medium {
-  font-weight: 500;
-}
-
-/* Specific styles for resend OTP button */
-.bg-gray-200 {
-  background-color: #e5e7eb;
-}
-
-.text-gray-800 {
-  color: #1f2937;
-}
-
-.hover\:bg-gray-300:hover {
-  background-color: #d1d5db;
-}
-
-.focus\:ring-gray-400:focus {
-  --tw-ring-color: #9ca3af;
-}
-
-/* Logout button specific style */
-.bg-red-500 {
-  background-color: #ef4444;
-}
-
-.hover\:bg-red-600:hover {
-  background-color: #dc2626;
-}
-
-.focus\:ring-red-500:focus {
-  --tw-ring-color: #ef4444;
+  background-color: #dc2626; /* A slightly darker red */
 }
 
 /* Flex utilities for pin-verify-login.html */
