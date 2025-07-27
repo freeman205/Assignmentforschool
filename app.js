@@ -321,7 +321,7 @@ async function handlePinVerifyLoginForm(event) {
 
 function handleLogoutButton() {
   clearAuthData()
-  window.location.href = "index.html" // Redirect to login page
+  window.location.href = "../login" // Redirect to login page
 }
 
 async function handlePinResetForm(event) {
