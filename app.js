@@ -103,7 +103,7 @@ async function handleLoginForm(event) {
     const response = await apiCall("/auth/login", "POST", { email, password })
     saveAuthData(response.access_token, response.user)
     displayMessage("message", "Login successful!", true)
-    window.location.href = "pin-verify-login.html" // Redirect to PIN verification
+    window.location.href = "../pin-verify-login" // Redirect to PIN verification
   } catch (error) {
     displayMessage("message", error.message || "Login failed. Please check your credentials.", false)
   }
@@ -313,7 +313,7 @@ async function handlePinVerifyLoginForm(event) {
   try {
     await apiCall("/auth/verify-pin", "POST", { pin }, true) // Requires auth token
     displayMessage("message", "PIN verified. Accessing dashboard...", true)
-    window.location.href = "dashboard.html" // Redirect to dashboard
+    window.location.href = "../dashboard" // Redirect to dashboard
   } catch (error) {
     displayMessage("message", error.message || "Invalid PIN. Please try again.", false)
   }
