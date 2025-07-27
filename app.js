@@ -107,7 +107,7 @@ function getIpAddress() {
 }
 
 // --- API Call Wrapper ---
-const BASE_API_URL = "http://localhost:10000/api" // Your FastAPI backend URL - IMPORTANT: Update this for deployment!
+const BASE_API_URL = "https://dansog-backend.onrender.com/api" // Your FastAPI backend URL - IMPORTANT: Update this for deployment!
 
 /**
  * Makes an API call to the backend.
