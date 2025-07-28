@@ -1,16 +1,26 @@
-const API_BASE_URL = "https://dansog-backend.onrender.com/API";
+// dashboard.js
 
+const API_BASE_URL = "https://dansog-backend.onrender.com/api";
+
+// Get session values
+const accessToken = sessionStorage.getItem("accessToken");
+const currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
+
+// Redirect if not logged in
+if (!accessToken || !currentUser) {
+  window.location.href = "login.html";
+}
+
+// Menu toggle logic
 const menuToggle = document.getElementById("menuToggle");
 const sideMenu = document.getElementById("sideMenu");
-const mainContent = document.getElementById("mainContent");
-const walletBalance = document.getElementById("walletBalance");
 const actionSection = document.getElementById("actionSection");
 
-// Toggle menu logic
 menuToggle.addEventListener("click", () => {
   sideMenu.classList.toggle("hidden");
 });
 
+// Close menu when clicking outside
 document.addEventListener("click", (e) => {
   if (!sideMenu.contains(e.target) && !menuToggle.contains(e.target)) {
     sideMenu.classList.add("hidden");
@@ -18,130 +28,176 @@ document.addEventListener("click", (e) => {
 });
 
 // Load wallet balance
-async function fetchWalletBalance() {
-  const token = sessionStorage.getItem("accessToken");
-  const email = sessionStorage.getItem("email");
-
-  if (!token || !email) {
-    walletBalance.textContent = "Not logged in";
-    return;
-  }
-
+async function loadWalletBalance() {
   try {
-    const res = await fetch(`${API_BASE_URL}/wallet/${email}`, {
-      headers: { Authorization: `Bearer ${token}` },
+    const response = await fetch(`${API_BASE_URL}/users/wallet`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
     });
-    const data = await res.json();
-    walletBalance.textContent = `${data.balance} points`;
+    const data = await response.json();
+    document.getElementById("walletBalance").textContent = `${data.balance} points`;
   } catch (error) {
-    walletBalance.textContent = "Error fetching balance";
+    document.getElementById("walletBalance").textContent = "Error loading balance";
   }
 }
 
-fetchWalletBalance();
+// Section loader
+const sectionHandlers = {
+  profile: () => {
+    actionSection.innerHTML = `
+      <div class="bg-white p-4 shadow rounded">
+        <h3 class="font-semibold mb-2">Your Profile</h3>
+        <p><strong>Email:</strong> ${currentUser.email}</p>
+        <p><strong>Full Name:</strong> ${currentUser.full_name || 'N/A'}</p>
+      </div>
+    `;
+  },
 
-// Menu actions
-const menuItems = document.querySelectorAll(".menu-item");
-menuItems.forEach((item) => {
+  history: async () => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/users/transfer-history`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      const history = await res.json();
+      const rows = history.map(
+        (h) => `<tr><td>${h.receiver_email}</td><td>${h.amount}</td><td>${new Date(h.created_at).toLocaleString()}</td></tr>`
+      ).join("");
+      actionSection.innerHTML = `
+        <div class="bg-white p-4 shadow rounded">
+          <h3 class="font-semibold mb-2">Transfer History</h3>
+          <table class="table-auto w-full text-sm">
+            <thead><tr><th>Receiver</th><th>Amount</th><th>Date</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+      `;
+    } catch {
+      actionSection.innerHTML = `<p class="text-red-500">Failed to load history</p>`;
+    }
+  },
+
+  redeem: () => {
+    actionSection.innerHTML = `
+      <div class="bg-white p-4 shadow rounded">
+        <h3 class="font-semibold mb-2">Redeem Points</h3>
+        <p>Feature coming soon...</p>
+      </div>
+    `;
+  },
+
+  transfer: () => {
+    actionSection.innerHTML = `
+      <div class="bg-white p-4 shadow rounded">
+        <h3 class="font-semibold mb-2">Transfer Points</h3>
+        <form id="transferForm" class="space-y-3">
+          <input type="email" id="receiver" placeholder="Receiver Email" class="w-full p-2 border rounded" required />
+          <input type="number" id="amount" placeholder="Amount" class="w-full p-2 border rounded" required />
+          <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Transfer</button>
+        </form>
+        <div id="transferMessage" class="mt-2 text-sm"></div>
+      </div>
+    `;
+
+    document.getElementById("transferForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const receiver = document.getElementById("receiver").value;
+      const amount = document.getElementById("amount").value;
+      const msg = document.getElementById("transferMessage");
+
+      try {
+        const res = await fetch(`${API_BASE_URL}/users/transfer`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({ receiver_email: receiver, amount: Number(amount) }),
+        });
+        const data = await res.json();
+        if (res.ok) {
+          msg.textContent = "Transfer successful.";
+          msg.className = "text-green-600 mt-2";
+          loadWalletBalance();
+        } else {
+          msg.textContent = data.detail || "Transfer failed.";
+          msg.className = "text-red-600 mt-2";
+        }
+      } catch {
+        msg.textContent = "Network error.";
+        msg.className = "text-red-600 mt-2";
+      }
+    });
+  },
+
+  password: () => {
+    actionSection.innerHTML = `
+      <div class="bg-white p-4 shadow rounded">
+        <h3 class="font-semibold mb-2">Change Password</h3>
+        <form id="passwordForm" class="space-y-3">
+          <input type="password" id="oldPassword" placeholder="Current Password" class="w-full p-2 border rounded" required />
+          <input type="password" id="newPassword" placeholder="New Password" class="w-full p-2 border rounded" required />
+          <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded">Change Password</button>
+        </form>
+        <div id="passwordMessage" class="mt-2 text-sm"></div>
+      </div>
+    `;
+
+    document.getElementById("passwordForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const oldPassword = document.getElementById("oldPassword").value;
+      const newPassword = document.getElementById("newPassword").value;
+      const msg = document.getElementById("passwordMessage");
+
+      try {
+        const res = await fetch(`${API_BASE_URL}/auth/change-password`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({ old_password: oldPassword, new_password: newPassword }),
+        });
+        const data = await res.json();
+        if (res.ok) {
+          msg.textContent = "Password changed successfully.";
+          msg.className = "text-green-600";
+        } else {
+          msg.textContent = data.detail || "Password change failed.";
+          msg.className = "text-red-600";
+        }
+      } catch {
+        msg.textContent = "Network error.";
+        msg.className = "text-red-600";
+      }
+    });
+  },
+
+  pin: () => {
+    actionSection.innerHTML = `
+      <div class="bg-white p-4 shadow rounded">
+        <h3 class="font-semibold mb-2">Change PIN</h3>
+        <p>Coming soon...</p>
+      </div>
+    `;
+  },
+
+  logout: () => {
+    sessionStorage.clear();
+    window.location.href = "login.html";
+  }
+};
+
+// Listen to menu items
+document.querySelectorAll(".menu-item").forEach((item) => {
   item.addEventListener("click", () => {
-    sideMenu.classList.add("hidden");
-    const section = item.getAttribute("data-section");
-    handleSection(section);
+    const section = item.dataset.section;
+    if (sectionHandlers[section]) {
+      sectionHandlers[section]();
+      sideMenu.classList.add("hidden");
+    }
   });
 });
 
-function handleSection(section) {
-  switch (section) {
-    case "transfer":
-      renderTransferForm();
-      break;
-    case "password":
-      renderChangePasswordForm();
-      break;
-    default:
-      actionSection.innerHTML = `<p class='text-gray-600'>${section} section coming soon...</p>`;
-  }
-}
-
-function renderTransferForm() {
-  actionSection.innerHTML = `
-    <div class="bg-white p-4 rounded shadow">
-      <h3 class="text-lg font-semibold mb-2">Transfer Points</h3>
-      <form id="transferForm" class="space-y-4">
-        <input type="email" id="recipientEmail" placeholder="Recipient Email" class="w-full p-2 border rounded" required>
-        <input type="number" id="pointsAmount" placeholder="Points to Transfer" class="w-full p-2 border rounded" required>
-        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Transfer</button>
-      </form>
-      <div id="transferMsg" class="mt-2 text-sm"></div>
-    </div>
-  `;
-
-  document.getElementById("transferForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const token = sessionStorage.getItem("accessToken");
-    const email = sessionStorage.getItem("email");
-    const to = document.getElementById("recipientEmail").value;
-    const points = document.getElementById("pointsAmount").value;
-    const msg = document.getElementById("transferMsg");
-
-    try {
-      const res = await fetch(`${API_BASE_URL}/transfer`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ from: email, to, points }),
-      });
-
-      const result = await res.json();
-      if (res.ok) {
-        msg.textContent = "Transfer successful!";
-        fetchWalletBalance();
-      } else {
-        msg.textContent = result.detail || "Transfer failed.";
-      }
-    } catch (err) {
-      msg.textContent = "Error occurred.";
-    }
-  });
-}
-
-function renderChangePasswordForm() {
-  actionSection.innerHTML = `
-    <div class="bg-white p-4 rounded shadow">
-      <h3 class="text-lg font-semibold mb-2">Change Password</h3>
-      <form id="passwordForm" class="space-y-4">
-        <input type="password" id="oldPassword" placeholder="Old Password" class="w-full p-2 border rounded" required>
-        <input type="password" id="newPassword" placeholder="New Password" class="w-full p-2 border rounded" required>
-        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Change</button>
-      </form>
-      <div id="passwordMsg" class="mt-2 text-sm"></div>
-    </div>
-  `;
-
-  document.getElementById("passwordForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const token = sessionStorage.getItem("accessToken");
-    const email = sessionStorage.getItem("email");
-    const oldPassword = document.getElementById("oldPassword").value;
-    const newPassword = document.getElementById("newPassword").value;
-    const msg = document.getElementById("passwordMsg");
-
-    try {
-      const res = await fetch(`${API_BASE_URL}/change-password`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ email, old_password: oldPassword, new_password: newPassword }),
-      });
-
-      const result = await res.json();
-      msg.textContent = res.ok ? "Password updated." : (result.detail || "Failed to update.");
-    } catch (err) {
-      msg.textContent = "Error occurred.";
-    }
-  });
-}
+// Initial load
+loadWalletBalance();
