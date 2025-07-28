@@ -1,8 +1,8 @@
 const API_BASE = "https://dansog-backend.onrender.com/API";
 
 // Access token and user email (saved during login)
-const accessToken = sessionStorage.getItem("access_token");
-const userEmail = sessionStorage.getItem("user_email");
+const accessToken = sessionStorage.getItem("accessToken");
+const userEmail = sessionStorage.getItem("email");
 
 // Global auth header
 const authHeaders = {
@@ -19,7 +19,7 @@ const dashboardHome = document.getElementById("dashboardHome");
 const walletBalance = document.getElementById("walletBalance");
 
 // Redirect if not logged in
-if (!accessToken || !userEmail) {
+if (!accessToken || !email) {
   alert("Session expired. Please login again.");
   window.location.href = "/login";
 }
