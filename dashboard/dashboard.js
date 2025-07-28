@@ -20,7 +20,7 @@ const dashboardHome = document.getElementById("dashboardHome");
 const walletBalance = document.getElementById("walletBalance");
 
 // Redirect if session expired
-if (!accessToken || !userEmail) {
+if (!accessToken || !email) {
   alert("Session expired. Please login again.");
   window.location.href = "/login";
 }
