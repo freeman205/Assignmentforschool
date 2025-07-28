@@ -8,7 +8,7 @@ const toggleButton = document.getElementById("menu-toggle");
 const menuList = document.getElementById("menu-list");
 
 if (!accessToken || !currentUser) {
-  window.location.href = "/dashboard";
+  window.location.href = "/login";
 }
 
 // === TOGGLE MENU ===
