@@ -1,231 +1,259 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const menuBtn = document.getElementById('menu-btn');
-  const menu = document.getElementById('menu');
-  const actionSection = document.getElementById('action-section');
-  const balanceElement = document.getElementById('wallet-balance');
-  const baseUrl = 'https://dansog-backend.onrender.com/api';
-  const token = sessionStorage.getItem('accessToken');
+  const apiUrl = 'https://dansog-backend.onrender.com/api';
+  const accessToken = sessionStorage.getItem('accessToken');
   const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
 
-  // ===== TOGGLE MENU FUNCTION =====
-  menuBtn.addEventListener('click', (e) => {
+  const menuToggle = document.getElementById('menuToggle');
+  const sideMenu = document.getElementById('sideMenu');
+  const walletBalanceEl = document.getElementById('walletBalance');
+  const actionSection = document.getElementById('actionSection');
+
+  // Toggle menu
+  menuToggle.addEventListener('click', (e) => {
     e.stopPropagation();
-    menu.classList.toggle('hidden');
+    sideMenu.classList.toggle('hidden');
   });
 
+  // Hide menu if clicked outside
   document.addEventListener('click', (e) => {
-    if (!menu.contains(e.target) && !menuBtn.contains(e.target)) {
-      menu.classList.add('hidden');
+    if (!sideMenu.contains(e.target) && e.target !== menuToggle) {
+      sideMenu.classList.add('hidden');
     }
   });
 
-  // ===== FETCH WALLET DATA =====
-  async function fetchStats() {
-    try {
-      const res = await fetch(`${baseUrl}/dashboard/stats`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      const data = await res.json();
-      balanceElement.textContent = data.points_balance;
-    } catch (err) {
-      balanceElement.textContent = 'Error';
-      console.error('Wallet Fetch Error:', err);
-    }
-  }
-
-  // ===== MENU ITEM ACTIONS =====
-  const sectionHandlers = {
-    profile: async () => {
-      try {
-        const res = await fetch(`${baseUrl}/dashboard/stats`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        const data = await res.json();
-
-        actionSection.innerHTML = `
-          <div class="bg-white p-4 rounded shadow">
-            <h2 class="text-lg font-semibold mb-2">Profile</h2>
-            <p><strong>Email:</strong> ${currentUser.email}</p>
-            <p><strong>Full Name:</strong> ${currentUser.full_name || 'N/A'}</p>
-            <p><strong>Completed Surveys:</strong> ${data.completed_surveys}</p>
-            <p><strong>Total Earned:</strong> ${data.total_earned}</p>
-            <p><strong>Pending Redemptions:</strong> ${data.pending_redemptions}</p>
-          </div>
-        `;
-      } catch (err) {
-        actionSection.innerHTML = `<p>Error loading profile.</p>`;
-      }
-    },
-
-    transferHistory: async () => {
-      try {
-        const res = await fetch(`${baseUrl}/points/history`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        const data = await res.json();
-
-        const rows = data.transfers.map(t => `
-          <tr>
-            <td>${t.from_user_id === currentUser.id ? 'Sent' : 'Received'}</td>
-            <td>${t.amount}</td>
-          </tr>
-        `).join('');
-
-        actionSection.innerHTML = `
-          <div class="bg-white p-4 rounded shadow">
-            <h2 class="text-lg font-semibold mb-2">Transfer History</h2>
-            <table class="w-full">
-              <thead><tr><th>Type</th><th>Amount</th></tr></thead>
-              <tbody>${rows}</tbody>
-            </table>
-          </div>
-        `;
-      } catch {
-        actionSection.innerHTML = `<p>Error loading transfer history</p>`;
-      }
-    },
-
-    redeemPoints: async () => {
-      try {
-        const res = await fetch(`${baseUrl}/redemption/rates`);
-        const rates = await res.json();
-
-        actionSection.innerHTML = `
-          <div class="bg-white p-4 rounded shadow">
-            <h2 class="text-lg font-semibold mb-2">Redeem Points</h2>
-            <form id="redeemForm" class="space-y-3">
-              <select id="redeemType" class="w-full border p-2 rounded">
-                <option value="bitcoin">Bitcoin</option>
-                <option value="gift_card">Gift Card</option>
-              </select>
-              <input id="pointsAmount" type="number" placeholder="Points" class="w-full border p-2 rounded" required>
-              <input id="walletAddress" type="text" placeholder="Wallet or Email" class="w-full border p-2 rounded" required>
-              <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Redeem</button>
-            </form>
-          </div>
-        `;
-
-        document.getElementById('redeemForm').addEventListener('submit', async (e) => {
-          e.preventDefault();
-          const type = document.getElementById('redeemType').value;
-          const points_amount = parseInt(document.getElementById('pointsAmount').value);
-          const wallet = document.getElementById('walletAddress').value;
-
-          const payload = {
-            type,
-            points_amount,
-            wallet_address: type === 'bitcoin' ? wallet : null,
-            email_address: type === 'gift_card' ? wallet : null
-          };
-
-          const redeemRes = await fetch(`${baseUrl}/redemption/request`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`
-            },
-            body: JSON.stringify(payload)
-          });
-
-          const msg = await redeemRes.json();
-          alert(msg.message || 'Redemption Submitted');
-          fetchStats(); // update balance
-        });
-
-      } catch (err) {
-        actionSection.innerHTML = `<p>Error loading redemption form</p>`;
-      }
-    },
-
-    transferPoints: () => {
-      actionSection.innerHTML = `
-        <div class="bg-white p-4 rounded shadow">
-          <h2 class="text-lg font-semibold mb-2">Transfer Points</h2>
-          <form id="transferForm" class="space-y-3">
-            <input id="toEmail" type="email" placeholder="Recipient Email" class="w-full border p-2 rounded" required>
-            <input id="amount" type="number" placeholder="Amount" class="w-full border p-2 rounded" required>
-            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Send</button>
-          </form>
-        </div>
-      `;
-
-      document.getElementById('transferForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const to_email = document.getElementById('toEmail').value;
-        const amount = parseInt(document.getElementById('amount').value);
-
-        try {
-          const res = await fetch(`${baseUrl}/points/transfer`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${token}`
-            },
-            body: JSON.stringify({ to_email, amount })
-          });
-
-          const data = await res.json();
-          alert(data.message || 'Transfer successful');
-          fetchStats();
-        } catch (err) {
-          alert('Transfer failed');
-        }
-      });
-    },
-
-    changePassword: () => {
-      actionSection.innerHTML = `
-        <div class="bg-white p-4 rounded shadow">
-          <h2 class="text-lg font-semibold mb-2">Change Password</h2>
-          <form id="changePasswordForm" class="space-y-3">
-            <input type="password" id="oldPassword" placeholder="Old Password" class="w-full border p-2 rounded" required>
-            <input type="password" id="newPassword" placeholder="New Password" class="w-full border p-2 rounded" required>
-            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Change</button>
-          </form>
-        </div>
-      `;
-
-      document.getElementById('changePasswordForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        // Implement API call if route exists
-        alert('Change Password: Backend route integration pending');
-      });
-    },
-
-    changePin: () => {
-      actionSection.innerHTML = `
-        <div class="bg-white p-4 rounded shadow">
-          <h2 class="text-lg font-semibold mb-2">Change PIN</h2>
-          <form id="changePinForm" class="space-y-3">
-            <input type="password" id="oldPin" placeholder="Old PIN" class="w-full border p-2 rounded" required>
-            <input type="password" id="newPin" placeholder="New PIN" class="w-full border p-2 rounded" required>
-            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Change</button>
-          </form>
-        </div>
-      `;
-
-      document.getElementById('changePinForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        alert('Change PIN: Backend route integration pending');
-      });
-    },
-
-    logout: () => {
-      sessionStorage.clear();
-      window.location.href = '/login.html';
-    }
-  };
-
-  // ===== BIND MENU ITEM CLICKS =====
-  document.querySelectorAll('.menu-item').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-      e.preventDefault();
-      menu.classList.add('hidden');
-      const action = btn.dataset.action;
-      if (sectionHandlers[action]) sectionHandlers[action]();
+  // Menu click handler
+  document.querySelectorAll('.menu-item').forEach(item => {
+    item.addEventListener('click', (e) => {
+      const section = e.target.dataset.section;
+      sideMenu.classList.add('hidden');
+      handleMenuAction(section);
     });
   });
 
-  // Initial Wallet Fetch
-  fetchStats();
+  // Load dashboard stats (wallet balance)
+  async function loadDashboardStats() {
+    try {
+      const res = await fetch(`${apiUrl}/dashboard/stats`, {
+        headers: { Authorization: `Bearer ${accessToken}` }
+      });
+      if (!res.ok) throw new Error("Stats error");
+      const data = await res.json();
+      walletBalanceEl.textContent = `${data.points_balance} points`;
+    } catch (err) {
+      walletBalanceEl.textContent = "Error loading";
+      console.error("Wallet error:", err);
+    }
+  }
+
+  // Section logic
+  async function handleMenuAction(section) {
+    actionSection.innerHTML = '';
+
+    switch (section) {
+      case 'profile':
+        try {
+          const res = await fetch(`${apiUrl}/users/me`, {
+            headers: { Authorization: `Bearer ${accessToken}` }
+          });
+          const user = await res.json();
+          actionSection.innerHTML = `
+            <div class="bg-white p-4 rounded shadow">
+              <h3 class="font-bold mb-2">Your Profile</h3>
+              <p><strong>Email:</strong> ${user.email}</p>
+              <p><strong>Full Name:</strong> ${user.full_name || 'N/A'}</p>
+              <p><strong>Username:</strong> ${user.username || 'N/A'}</p>
+            </div>
+          `;
+        } catch {
+          actionSection.innerHTML = 'Failed to load profile.';
+        }
+        break;
+
+      case 'history':
+        try {
+          const res = await fetch(`${apiUrl}/points/history`, {
+            headers: { Authorization: `Bearer ${accessToken}` }
+          });
+          const data = await res.json();
+          actionSection.innerHTML = `
+            <div class="bg-white p-4 rounded shadow">
+              <h3 class="font-bold mb-2">Transfer History</h3>
+              <ul class="text-sm space-y-1">
+                ${data.history.map(tx => `
+                  <li>${tx.amount} points to ${tx.receiver_email} on ${new Date(tx.timestamp).toLocaleString()}</li>
+                `).join('')}
+              </ul>
+            </div>
+          `;
+        } catch {
+          actionSection.innerHTML = 'Failed to load history.';
+        }
+        break;
+
+      case 'redeem':
+        try {
+          const res = await fetch(`${apiUrl}/redemption/rates`, {
+            headers: { Authorization: `Bearer ${accessToken}` }
+          });
+          const rates = await res.json();
+          actionSection.innerHTML = `
+            <div class="bg-white p-4 rounded shadow">
+              <h3 class="font-bold mb-2">Redeem Points</h3>
+              <form id="redeemForm" class="space-y-2">
+                <label>Type:
+                  <select name="type" class="block w-full p-2 border rounded">
+                    <option value="btc">Bitcoin (${rates.btc_rate} pts/$)</option>
+                    <option value="giftcard">Gift Card (${rates.giftcard_rate} pts/$)</option>
+                  </select>
+                </label>
+                <input name="amount" placeholder="Amount to redeem" type="number" required class="w-full p-2 border rounded" />
+                <input name="destination" placeholder="Wallet Address or Email" class="w-full p-2 border rounded" />
+                <button class="bg-blue-500 text-white px-4 py-2 rounded">Redeem</button>
+              </form>
+            </div>
+          `;
+          document.getElementById('redeemForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const form = e.target;
+            const payload = {
+              type: form.type.value,
+              amount: form.amount.value,
+              destination: form.destination.value
+            };
+            try {
+              const r = await fetch(`${apiUrl}/redemption/request`, {
+                method: 'POST',
+                headers: {
+                  Authorization: `Bearer ${accessToken}`,
+                  'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+              });
+              if (r.ok) alert("Redemption request submitted");
+              else alert("Failed to redeem");
+            } catch {
+              alert("Error redeeming");
+            }
+          });
+        } catch {
+          actionSection.innerHTML = 'Failed to load rates.';
+        }
+        break;
+
+      case 'transfer':
+        actionSection.innerHTML = `
+          <div class="bg-white p-4 rounded shadow">
+            <h3 class="font-bold mb-2">Transfer Points</h3>
+            <form id="transferForm" class="space-y-2">
+              <input name="receiver_email" placeholder="Receiver Email" class="w-full p-2 border rounded" required />
+              <input name="amount" type="number" placeholder="Amount" class="w-full p-2 border rounded" required />
+              <button class="bg-green-600 text-white px-4 py-2 rounded">Send</button>
+            </form>
+          </div>
+        `;
+        document.getElementById('transferForm').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const form = e.target;
+          const payload = {
+            receiver_email: form.receiver_email.value,
+            amount: parseInt(form.amount.value)
+          };
+          try {
+            const res = await fetch(`${apiUrl}/points/transfer`, {
+              method: 'POST',
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(payload)
+            });
+            if (res.ok) alert('Transfer successful');
+            else alert('Transfer failed');
+          } catch {
+            alert('Transfer error');
+          }
+        });
+        break;
+
+      case 'password':
+        actionSection.innerHTML = `
+          <div class="bg-white p-4 rounded shadow">
+            <h3 class="font-bold mb-2">Change Password</h3>
+            <form id="passwordForm" class="space-y-2">
+              <input type="password" name="old_password" placeholder="Old Password" required class="w-full p-2 border rounded" />
+              <input type="password" name="new_password" placeholder="New Password" required class="w-full p-2 border rounded" />
+              <button class="bg-yellow-500 text-white px-4 py-2 rounded">Change</button>
+            </form>
+          </div>
+        `;
+        document.getElementById('passwordForm').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const form = e.target;
+          const payload = {
+            old_password: form.old_password.value,
+            new_password: form.new_password.value
+          };
+          try {
+            const res = await fetch(`${apiUrl}/auth/change-password`, {
+              method: 'POST',
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(payload)
+            });
+            if (res.ok) alert("Password changed");
+            else alert("Password change failed");
+          } catch {
+            alert("Password error");
+          }
+        });
+        break;
+
+      case 'pin':
+        actionSection.innerHTML = `
+          <div class="bg-white p-4 rounded shadow">
+            <h3 class="font-bold mb-2">Change PIN</h3>
+            <form id="pinForm" class="space-y-2">
+              <input type="password" name="old_pin" placeholder="Old PIN" required class="w-full p-2 border rounded" />
+              <input type="password" name="new_pin" placeholder="New PIN" required class="w-full p-2 border rounded" />
+              <button class="bg-purple-600 text-white px-4 py-2 rounded">Change</button>
+            </form>
+          </div>
+        `;
+        document.getElementById('pinForm').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const form = e.target;
+          const payload = {
+            old_pin: form.old_pin.value,
+            new_pin: form.new_pin.value
+          };
+          try {
+            const res = await fetch(`${apiUrl}/auth/change-pin`, {
+              method: 'POST',
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify(payload)
+            });
+            if (res.ok) alert("PIN changed");
+            else alert("PIN change failed");
+          } catch {
+            alert("PIN error");
+          }
+        });
+        break;
+
+      case 'logout':
+        sessionStorage.clear();
+        window.location.href = '/login';
+        break;
+
+      default:
+        actionSection.innerHTML = `<p class="text-red-500">Unknown section selected.</p>`;
+    }
+  }
+
+  loadDashboardStats();
 });
