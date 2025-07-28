@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const apiBase = "https://dansog-backend.onrender.com/api";
 
   if (!accessToken || !currentUser) {
-    window.location.href = "/login.html";
+    window.location.href = "/login";
     return;
   }
 
@@ -202,7 +202,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const logout = () => {
     sessionStorage.clear();
-    window.location.href = "/login.html";
+    window.location.href = "/login";
   };
 
   // Menu Handlers
