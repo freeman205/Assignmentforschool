@@ -1,6 +1,7 @@
+// dashboard.js
 const API_BASE = "https://dansog-backend.onrender.com/API";
 
-// Access token and user email (saved during login)
+// Session storage access
 const accessToken = sessionStorage.getItem("accessToken");
 const userEmail = sessionStorage.getItem("email");
 
@@ -10,7 +11,7 @@ const authHeaders = {
   Authorization: `Bearer ${accessToken}`,
 };
 
-// DOM References
+// DOM references
 const menuToggle = document.getElementById("menuToggle");
 const sideMenu = document.getElementById("sideMenu");
 const menuItems = document.querySelectorAll(".menu-item");
@@ -18,25 +19,25 @@ const actionSection = document.getElementById("actionSection");
 const dashboardHome = document.getElementById("dashboardHome");
 const walletBalance = document.getElementById("walletBalance");
 
-// Redirect if not logged in
-if (!accessToken || !email) {
+// Redirect if session expired
+if (!accessToken || !userEmail) {
   alert("Session expired. Please login again.");
   window.location.href = "/login";
 }
 
-// Toggle Menu
+// Toggle side menu
 menuToggle.addEventListener("click", () => {
   sideMenu.classList.toggle("hidden");
 });
 
-// Close menu if clicked outside
+// Close menu when clicking outside
 document.addEventListener("click", (e) => {
   if (!sideMenu.contains(e.target) && e.target !== menuToggle) {
     sideMenu.classList.add("hidden");
   }
 });
 
-// Handle menu item click
+// Menu item click handler
 menuItems.forEach((item) => {
   item.addEventListener("click", async () => {
     const section = item.dataset.section;
@@ -45,38 +46,22 @@ menuItems.forEach((item) => {
     actionSection.innerHTML = `<p class="text-blue-600">Loading ${section}...</p>`;
 
     switch (section) {
-      case "profile":
-        loadProfile();
-        break;
-      case "history":
-        loadTransferHistory();
-        break;
-      case "redeem":
-        showRedeemForm();
-        break;
-      case "transfer":
-        showTransferForm();
-        break;
-      case "password":
-        showChangePasswordForm();
-        break;
-      case "pin":
-        showChangePinForm();
-        break;
-      case "logout":
-        logoutUser();
-        break;
+      case "profile": loadProfile(); break;
+      case "history": loadTransferHistory(); break;
+      case "redeem": showRedeemForm(); break;
+      case "transfer": showTransferForm(); break;
+      case "password": showChangePasswordForm(); break;
+      case "pin": showChangePinForm(); break;
+      case "logout": logoutUser(); break;
     }
   });
 });
 
-// Load wallet balance on dashboard load
+// Load wallet on page load
 window.addEventListener("DOMContentLoaded", () => {
-  fetch(`${API_BASE}/user/wallet?email=${userEmail}`, {
-    headers: authHeaders,
-  })
-    .then((res) => res.json())
-    .then((data) => {
+  fetch(`${API_BASE}/user/wallet?email=${userEmail}`, { headers: authHeaders })
+    .then(res => res.json())
+    .then(data => {
       walletBalance.textContent = `${data.points || 0} Points`;
     })
     .catch(() => {
@@ -84,10 +69,9 @@ window.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+// ---- Actions ----
 function loadProfile() {
-  fetch(`${API_BASE}/user/profile?email=${userEmail}`, {
-    headers: authHeaders,
-  })
+  fetch(`${API_BASE}/user/profile?email=${userEmail}`, { headers: authHeaders })
     .then(res => res.json())
     .then(data => {
       actionSection.innerHTML = `
@@ -100,9 +84,7 @@ function loadProfile() {
 }
 
 function loadTransferHistory() {
-  fetch(`${API_BASE}/transfer/history?email=${userEmail}`, {
-    headers: authHeaders,
-  })
+  fetch(`${API_BASE}/transfer/history?email=${userEmail}`, { headers: authHeaders })
     .then(res => res.json())
     .then(data => {
       let html = `<h3 class="font-bold text-lg">Transfer History</h3><ul class="mt-2">`;
@@ -135,10 +117,10 @@ function redeemPoints(e) {
     body: JSON.stringify({ email: userEmail, points }),
   })
     .then(res => res.json())
-    .then(data => {
+    .then(() => {
       alert("Redeemed successfully");
       actionSection.innerHTML = "";
-      location.reload(); // Refresh balance
+      location.reload();
     });
 }
 
@@ -163,7 +145,7 @@ function transferPoints(e) {
     body: JSON.stringify({ email: userEmail, receiver, amount }),
   })
     .then(res => res.json())
-    .then(data => {
+    .then(() => {
       alert("Transfer successful");
       actionSection.innerHTML = "";
       location.reload();
@@ -221,8 +203,7 @@ function changePin(e) {
 }
 
 function logoutUser() {
-  sessionStorage.removeItem("access_token");
-  sessionStorage.removeItem("user_email");
+  sessionStorage.clear();
   alert("Logged out");
   window.location.href = "/login";
 }
