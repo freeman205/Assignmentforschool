@@ -1,9 +1,28 @@
 const API_BASE = "https://dansog-backend.onrender.com/API";
+
+// Access token and user email (saved during login)
+const accessToken = localStorage.getItem("access_token");
+const userEmail = localStorage.getItem("user_email");
+
+// Global auth header
+const authHeaders = {
+  "Content-Type": "application/json",
+  Authorization: `Bearer ${accessToken}`,
+};
+
+// DOM References
 const menuToggle = document.getElementById("menuToggle");
 const sideMenu = document.getElementById("sideMenu");
 const menuItems = document.querySelectorAll(".menu-item");
 const actionSection = document.getElementById("actionSection");
 const dashboardHome = document.getElementById("dashboardHome");
+const walletBalance = document.getElementById("walletBalance");
+
+// Redirect if not logged in
+if (!accessToken || !userEmail) {
+  alert("Session expired. Please login again.");
+  window.location.href = "/login.html";
+}
 
 // Toggle Menu
 menuToggle.addEventListener("click", () => {
@@ -51,21 +70,39 @@ menuItems.forEach((item) => {
   });
 });
 
+// Load wallet balance on dashboard load
+window.addEventListener("DOMContentLoaded", () => {
+  fetch(`${API_BASE}/user/wallet?email=${userEmail}`, {
+    headers: authHeaders,
+  })
+    .then((res) => res.json())
+    .then((data) => {
+      walletBalance.textContent = `${data.points || 0} Points`;
+    })
+    .catch(() => {
+      walletBalance.textContent = "Unable to fetch balance.";
+    });
+});
+
 function loadProfile() {
-  fetch(`${API_BASE}/user/profile`)
+  fetch(`${API_BASE}/user/profile?email=${userEmail}`, {
+    headers: authHeaders,
+  })
     .then(res => res.json())
     .then(data => {
       actionSection.innerHTML = `
         <h3 class="font-bold text-lg">Your Profile</h3>
         <pre class="mt-2 bg-gray-50 p-2 rounded">${JSON.stringify(data, null, 2)}</pre>
       `;
-    }).catch(err => {
+    }).catch(() => {
       actionSection.innerHTML = `<p class="text-red-500">Failed to load profile.</p>`;
     });
 }
 
 function loadTransferHistory() {
-  fetch(`${API_BASE}/transfer/history`)
+  fetch(`${API_BASE}/transfer/history?email=${userEmail}`, {
+    headers: authHeaders,
+  })
     .then(res => res.json())
     .then(data => {
       let html = `<h3 class="font-bold text-lg">Transfer History</h3><ul class="mt-2">`;
@@ -94,13 +131,14 @@ function redeemPoints(e) {
   const points = document.getElementById("points").value;
   fetch(`${API_BASE}/redeem`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ points }),
+    headers: authHeaders,
+    body: JSON.stringify({ email: userEmail, points }),
   })
     .then(res => res.json())
     .then(data => {
       alert("Redeemed successfully");
       actionSection.innerHTML = "";
+      location.reload(); // Refresh balance
     });
 }
 
@@ -121,13 +159,14 @@ function transferPoints(e) {
   const amount = document.getElementById("amount").value;
   fetch(`${API_BASE}/transfer`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ receiver, amount }),
+    headers: authHeaders,
+    body: JSON.stringify({ email: userEmail, receiver, amount }),
   })
     .then(res => res.json())
     .then(data => {
       alert("Transfer successful");
       actionSection.innerHTML = "";
+      location.reload();
     });
 }
 
@@ -148,8 +187,8 @@ function changePassword(e) {
   const newPassword = document.getElementById("newPassword").value;
   fetch(`${API_BASE}/user/change-password`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ oldPassword, newPassword }),
+    headers: authHeaders,
+    body: JSON.stringify({ email: userEmail, oldPassword, newPassword }),
   }).then(() => {
     alert("Password changed successfully");
     actionSection.innerHTML = "";
@@ -173,8 +212,8 @@ function changePin(e) {
   const newPin = document.getElementById("newPin").value;
   fetch(`${API_BASE}/user/change-pin`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ oldPin, newPin }),
+    headers: authHeaders,
+    body: JSON.stringify({ email: userEmail, oldPin, newPin }),
   }).then(() => {
     alert("PIN changed successfully");
     actionSection.innerHTML = "";
@@ -182,9 +221,8 @@ function changePin(e) {
 }
 
 function logoutUser() {
-  fetch(`${API_BASE}/logout`, { method: "POST" })
-    .then(() => {
-      alert("Logged out");
-      window.location.href = "/login.html";
-    });
+  localStorage.removeItem("access_token");
+  localStorage.removeItem("user_email");
+  alert("Logged out");
+  window.location.href = "/login.html";
 }
