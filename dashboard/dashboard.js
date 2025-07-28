@@ -1,14 +1,20 @@
 const API_BASE = "https://dansog-backend.onrender.com/API";
 
 // Access token and user email (saved during login)
-const accessToken = localStorage.getItem("access_token");
-const userEmail = localStorage.getItem("user_email");
+const accessToken = sessionStorage.getItem("access_token");
+const userEmail = sessionStorage.getItem("user_email");
 
 // Global auth header
 const authHeaders = {
   "Content-Type": "application/json",
   Authorization: `Bearer ${accessToken}`,
 };
+
+// Redirect if not logged in
+if (!accessToken || !userEmail) {
+  alert("Session expired. Please login again.");
+  window.location.href = "../login";
+}
 
 // DOM References
 const menuToggle = document.getElementById("menuToggle");
@@ -17,12 +23,6 @@ const menuItems = document.querySelectorAll(".menu-item");
 const actionSection = document.getElementById("actionSection");
 const dashboardHome = document.getElementById("dashboardHome");
 const walletBalance = document.getElementById("walletBalance");
-
-// Redirect if not logged in
-if (!accessToken || !userEmail) {
-  alert("Session expired. Please login again.");
-  window.location.href = "/login.html";
-}
 
 // Toggle Menu
 menuToggle.addEventListener("click", () => {
