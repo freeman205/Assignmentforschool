@@ -6,12 +6,10 @@ const API_BASE_URL = "https://dansog-backend.onrender.com/api";
 const accessToken = sessionStorage.getItem("accessToken");
 const currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
 
-// Redirect if not logged in
 if (!accessToken || !currentUser) {
-  window.location.href = "/login";
+  window.location.href = "login.html";
 }
 
-// Menu toggle logic
 const menuToggle = document.getElementById("menuToggle");
 const sideMenu = document.getElementById("sideMenu");
 const actionSection = document.getElementById("actionSection");
@@ -20,61 +18,45 @@ menuToggle.addEventListener("click", () => {
   sideMenu.classList.toggle("hidden");
 });
 
-// Close menu when clicking outside
 document.addEventListener("click", (e) => {
   if (!sideMenu.contains(e.target) && !menuToggle.contains(e.target)) {
     sideMenu.classList.add("hidden");
   }
 });
 
-// Load wallet balance
 async function loadWalletBalance() {
   try {
     const response = await fetch(`${API_BASE_URL}/users/wallet`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
+      headers: { Authorization: `Bearer ${accessToken}` },
     });
     const data = await response.json();
     document.getElementById("walletBalance").textContent = `${data.balance} points`;
-  } catch (error) {
+  } catch {
     document.getElementById("walletBalance").textContent = "Error loading balance";
   }
 }
 
-// Section loader
-profile: async () => {
-  try {
-    const response = await fetch(`${API_BASE_URL}/user/profile`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-        'Content-Type': 'application/json'
-      }
-    });
+const sectionHandlers = {
+  profile: async () => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/users/me`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      const user = await res.json();
+      actionSection.innerHTML = `
+        <div class="bg-white p-4 shadow rounded">
+          <h3 class="font-semibold mb-2">Your Profile</h3>
+          <p><strong>Email:</strong> ${user.email}</p>
+          <p><strong>Full Name:</strong> ${user.full_name || 'N/A'}</p>
+          <p><strong>Status:</strong> ${user.status || 'N/A'}</p>
+          <p><strong>Joined:</strong> ${new Date(user.created_at).toLocaleString()}</p>
+        </div>
+      `;
+    } catch {
+      actionSection.innerHTML = `<p class="text-red-500">Failed to load profile</p>`;
+    }
+  },
 
-    if (!response.ok) throw new Error('Failed to fetch profile data');
-
-    const data = await response.json();
-
-    actionSection.innerHTML = `
-      <div class="bg-white p-4 shadow rounded">
-        <h3 class="font-semibold mb-2">Your Profile</h3>
-        <p><strong>Email:</strong> ${data.email}</p>
-        <p><strong>Full Name:</strong> ${data.full_name || 'N/A'}</p>
-        <p><strong>Username:</strong> ${data.username || 'N/A'}</p>
-        <p><strong>Referral Code:</strong> ${data.referral_code || 'N/A'}</p>
-      </div>
-    `;
-  } catch (error) {
-    console.error(error);
-    actionSection.innerHTML = `
-      <div class="bg-white p-4 shadow rounded text-red-600">
-        Failed to load profile. Please try again later.
-      </div>
-    `;
-  }
-},
-  
   history: async () => {
     try {
       const res = await fetch(`${API_BASE_URL}/users/transfer-history`, {
@@ -98,13 +80,44 @@ profile: async () => {
     }
   },
 
-  redeem: () => {
-    actionSection.innerHTML = `
-      <div class="bg-white p-4 shadow rounded">
-        <h3 class="font-semibold mb-2">Redeem Points</h3>
-        <p>Feature coming soon...</p>
-      </div>
-    `;
+  redeem: async () => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/users/redeemable`, {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      const data = await res.json();
+      actionSection.innerHTML = `
+        <div class="bg-white p-4 shadow rounded">
+          <h3 class="font-semibold mb-2">Redeemable Points</h3>
+          <p>You can redeem: <strong>${data.redeemable} points</strong></p>
+          <button id="redeemBtn" class="bg-blue-500 text-white px-4 py-2 rounded mt-2">Redeem Now</button>
+          <div id="redeemMsg" class="mt-2 text-sm"></div>
+        </div>
+      `;
+
+      document.getElementById("redeemBtn").addEventListener("click", async () => {
+        try {
+          const r = await fetch(`${API_BASE_URL}/users/redeem`, {
+            method: "POST",
+            headers: { Authorization: `Bearer ${accessToken}` },
+          });
+          const d = await r.json();
+          const msg = document.getElementById("redeemMsg");
+          if (r.ok) {
+            msg.textContent = "Redeemed successfully!";
+            msg.className = "text-green-600";
+            loadWalletBalance();
+          } else {
+            msg.textContent = d.detail || "Redemption failed.";
+            msg.className = "text-red-600";
+          }
+        } catch {
+          document.getElementById("redeemMsg").textContent = "Network error.";
+        }
+      });
+    } catch {
+      actionSection.innerHTML = `<p class="text-red-500">Failed to load redeemable info</p>`;
+    }
   },
 
   transfer: () => {
@@ -198,18 +211,51 @@ profile: async () => {
     actionSection.innerHTML = `
       <div class="bg-white p-4 shadow rounded">
         <h3 class="font-semibold mb-2">Change PIN</h3>
-        <p>Coming soon...</p>
+        <form id="pinForm" class="space-y-3">
+          <input type="password" id="oldPin" placeholder="Current PIN" class="w-full p-2 border rounded" required />
+          <input type="password" id="newPin" placeholder="New PIN" class="w-full p-2 border rounded" required />
+          <button type="submit" class="bg-yellow-500 text-white px-4 py-2 rounded">Change PIN</button>
+        </form>
+        <div id="pinMessage" class="mt-2 text-sm"></div>
       </div>
     `;
+
+    document.getElementById("pinForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const oldPin = document.getElementById("oldPin").value;
+      const newPin = document.getElementById("newPin").value;
+      const msg = document.getElementById("pinMessage");
+
+      try {
+        const res = await fetch(`${API_BASE_URL}/auth/change-pin`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify({ old_pin: oldPin, new_pin: newPin }),
+        });
+        const data = await res.json();
+        if (res.ok) {
+          msg.textContent = "PIN changed successfully.";
+          msg.className = "text-green-600";
+        } else {
+          msg.textContent = data.detail || "PIN change failed.";
+          msg.className = "text-red-600";
+        }
+      } catch {
+        msg.textContent = "Network error.";
+        msg.className = "text-red-600";
+      }
+    });
   },
 
   logout: () => {
     sessionStorage.clear();
-    window.location.href = "/login";
+    window.location.href = "login.html";
   }
 };
 
-// Listen to menu items
 document.querySelectorAll(".menu-item").forEach((item) => {
   item.addEventListener("click", () => {
     const section = item.dataset.section;
@@ -220,5 +266,4 @@ document.querySelectorAll(".menu-item").forEach((item) => {
   });
 });
 
-// Initial load
 loadWalletBalance();
