@@ -43,17 +43,38 @@ async function loadWalletBalance() {
 }
 
 // Section loader
-const sectionHandlers = {
-  profile: () => {
+profile: async () => {
+  try {
+    const response = await fetch(`${API_BASE_URL}/user/profile`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (!response.ok) throw new Error('Failed to fetch profile data');
+
+    const data = await response.json();
+
     actionSection.innerHTML = `
       <div class="bg-white p-4 shadow rounded">
         <h3 class="font-semibold mb-2">Your Profile</h3>
-        <p><strong>Email:</strong> ${currentUser.email}</p>
-        <p><strong>Full Name:</strong> ${currentUser.full_name || 'N/A'}</p>
+        <p><strong>Email:</strong> ${data.email}</p>
+        <p><strong>Full Name:</strong> ${data.full_name || 'N/A'}</p>
+        <p><strong>Username:</strong> ${data.username || 'N/A'}</p>
+        <p><strong>Referral Code:</strong> ${data.referral_code || 'N/A'}</p>
       </div>
     `;
-  },
-
+  } catch (error) {
+    console.error(error);
+    actionSection.innerHTML = `
+      <div class="bg-white p-4 shadow rounded text-red-600">
+        Failed to load profile. Please try again later.
+      </div>
+    `;
+  }
+},
+  
   history: async () => {
     try {
       const res = await fetch(`${API_BASE_URL}/users/transfer-history`, {
