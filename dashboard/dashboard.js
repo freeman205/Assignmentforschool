@@ -8,7 +8,7 @@ const currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
 
 // Redirect if not logged in
 if (!accessToken || !currentUser) {
-  window.location.href = "login.html";
+  window.location.href = "/login";
 }
 
 // Menu toggle logic
@@ -184,7 +184,7 @@ const sectionHandlers = {
 
   logout: () => {
     sessionStorage.clear();
-    window.location.href = "login.html";
+    window.location.href = "/login";
   }
 };
 
