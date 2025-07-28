@@ -10,12 +10,6 @@ const authHeaders = {
   Authorization: `Bearer ${accessToken}`,
 };
 
-// Redirect if not logged in
-if (!accessToken || !userEmail) {
-  alert("Session expired. Please login again.");
-  window.location.href = "../login";
-}
-
 // DOM References
 const menuToggle = document.getElementById("menuToggle");
 const sideMenu = document.getElementById("sideMenu");
@@ -23,6 +17,12 @@ const menuItems = document.querySelectorAll(".menu-item");
 const actionSection = document.getElementById("actionSection");
 const dashboardHome = document.getElementById("dashboardHome");
 const walletBalance = document.getElementById("walletBalance");
+
+// Redirect if not logged in
+if (!accessToken || !userEmail) {
+  alert("Session expired. Please login again.");
+  window.location.href = "/login";
+}
 
 // Toggle Menu
 menuToggle.addEventListener("click", () => {
@@ -221,8 +221,8 @@ function changePin(e) {
 }
 
 function logoutUser() {
-  localStorage.removeItem("access_token");
-  localStorage.removeItem("user_email");
+  sessionStorage.removeItem("access_token");
+  sessionStorage.removeItem("user_email");
   alert("Logged out");
-  window.location.href = "/login.html";
+  window.location.href = "/login";
 }
