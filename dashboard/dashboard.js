@@ -7,7 +7,7 @@ const accessToken = sessionStorage.getItem("accessToken");
 const currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
 
 if (!accessToken || !currentUser) {
-  window.location.href = "login.html";
+  window.location.href = "/login";
 }
 
 const menuToggle = document.getElementById("menuToggle");
@@ -252,7 +252,7 @@ const sectionHandlers = {
 
   logout: () => {
     sessionStorage.clear();
-    window.location.href = "login.html";
+    window.location.href = "/login";
   }
 };
 
