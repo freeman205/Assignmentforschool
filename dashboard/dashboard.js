@@ -1,229 +1,231 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const menuButton = document.getElementById("menuButton");
-  const menuDropdown = document.getElementById("menuDropdown");
-  const actionSection = document.getElementById("actionSection");
+document.addEventListener('DOMContentLoaded', () => {
+  const menuBtn = document.getElementById('menu-btn');
+  const menu = document.getElementById('menu');
+  const actionSection = document.getElementById('action-section');
+  const balanceElement = document.getElementById('wallet-balance');
+  const baseUrl = 'https://dansog-backend.onrender.com/api';
+  const token = sessionStorage.getItem('accessToken');
+  const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
 
-  const accessToken = sessionStorage.getItem("accessToken");
-  const currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
-  const apiBase = "https://dansog-backend.onrender.com/api";
+  // ===== TOGGLE MENU FUNCTION =====
+  menuBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    menu.classList.toggle('hidden');
+  });
 
-  if (!accessToken || !currentUser) {
-    window.location.href = "/login";
-    return;
+  document.addEventListener('click', (e) => {
+    if (!menu.contains(e.target) && !menuBtn.contains(e.target)) {
+      menu.classList.add('hidden');
+    }
+  });
+
+  // ===== FETCH WALLET DATA =====
+  async function fetchStats() {
+    try {
+      const res = await fetch(`${baseUrl}/dashboard/stats`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const data = await res.json();
+      balanceElement.textContent = data.points_balance;
+    } catch (err) {
+      balanceElement.textContent = 'Error';
+      console.error('Wallet Fetch Error:', err);
+    }
   }
 
-  // Toggle menu
-  menuButton.addEventListener("click", (e) => {
-    e.stopPropagation();
-    menuDropdown.classList.toggle("hidden");
-  });
-
-  // Close menu on click outside
-  document.addEventListener("click", (e) => {
-    if (!menuButton.contains(e.target)) {
-      menuDropdown.classList.add("hidden");
-    }
-  });
-
-  // Fetch Dashboard Stats
-  const loadDashboardStats = async () => {
-    try {
-      const res = await fetch(`${apiBase}/dashboard/stats`, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
-      const stats = await res.json();
-
-      document.getElementById("walletBalance").innerText = stats.points_balance;
-      document.getElementById("surveyPlaceholder").innerHTML = `
-        <div class="text-sm text-gray-600">
-          Completed Surveys: ${stats.completed_surveys} |
-          Total Earned: ${stats.total_earned} |
-          Pending Redemptions: ${stats.pending_redemptions}
-        </div>`;
-    } catch (err) {
-      console.error("Failed to load stats", err);
-    }
-  };
-
-  // Load profile
-  const loadProfile = async () => {
-    const res = await fetch(`${apiBase}/dashboard/stats`, {
-      headers: { Authorization: `Bearer ${accessToken}` },
-    });
-    const stats = await res.json();
-
-    actionSection.innerHTML = `
-      <div class="bg-white p-4 rounded shadow">
-        <h3 class="text-lg font-semibold mb-2">Profile Info</h3>
-        <p><strong>Email:</strong> ${currentUser.email}</p>
-        <p><strong>Full Name:</strong> ${currentUser.full_name || "N/A"}</p>
-        <p><strong>Points Balance:</strong> ${stats.points_balance}</p>
-      </div>`;
-  };
-
-  const loadTransferForm = () => {
-    actionSection.innerHTML = `
-      <div class="bg-white p-4 rounded shadow">
-        <h3 class="font-semibold mb-2">Transfer Points</h3>
-        <input id="toEmail" type="email" placeholder="Recipient Email" class="input" />
-        <input id="transferAmount" type="number" placeholder="Amount" class="input mt-2" />
-        <button id="submitTransfer" class="btn mt-2">Send</button>
-      </div>`;
-    
-    document.getElementById("submitTransfer").addEventListener("click", async () => {
-      const toEmail = document.getElementById("toEmail").value;
-      const amount = parseInt(document.getElementById("transferAmount").value);
-
+  // ===== MENU ITEM ACTIONS =====
+  const sectionHandlers = {
+    profile: async () => {
       try {
-        const res = await fetch(`${apiBase}/points/transfer`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-          body: JSON.stringify({ to_email: toEmail, amount }),
+        const res = await fetch(`${baseUrl}/dashboard/stats`, {
+          headers: { Authorization: `Bearer ${token}` }
         });
-
         const data = await res.json();
-        alert(data.message || "Transfer successful");
-        loadDashboardStats();
+
+        actionSection.innerHTML = `
+          <div class="bg-white p-4 rounded shadow">
+            <h2 class="text-lg font-semibold mb-2">Profile</h2>
+            <p><strong>Email:</strong> ${currentUser.email}</p>
+            <p><strong>Full Name:</strong> ${currentUser.full_name || 'N/A'}</p>
+            <p><strong>Completed Surveys:</strong> ${data.completed_surveys}</p>
+            <p><strong>Total Earned:</strong> ${data.total_earned}</p>
+            <p><strong>Pending Redemptions:</strong> ${data.pending_redemptions}</p>
+          </div>
+        `;
       } catch (err) {
-        alert("Transfer failed.");
+        actionSection.innerHTML = `<p>Error loading profile.</p>`;
       }
-    });
-  };
+    },
 
-  const loadChangePasswordForm = () => {
-    actionSection.innerHTML = `
-      <div class="bg-white p-4 rounded shadow">
-        <h3 class="font-semibold mb-2">Change Password</h3>
-        <input id="oldPassword" type="password" placeholder="Old Password" class="input" />
-        <input id="newPassword" type="password" placeholder="New Password" class="input mt-2" />
-        <button id="submitPassword" class="btn mt-2">Update</button>
-      </div>`;
-
-    document.getElementById("submitPassword").addEventListener("click", async () => {
-      const oldPassword = document.getElementById("oldPassword").value;
-      const newPassword = document.getElementById("newPassword").value;
-
+    transferHistory: async () => {
       try {
-        const res = await fetch(`${apiBase}/auth/change-password`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-          body: JSON.stringify({ old_password: oldPassword, new_password: newPassword }),
+        const res = await fetch(`${baseUrl}/points/history`, {
+          headers: { Authorization: `Bearer ${token}` }
         });
-
         const data = await res.json();
-        alert(data.message || "Password changed");
-      } catch (err) {
-        alert("Failed to change password.");
+
+        const rows = data.transfers.map(t => `
+          <tr>
+            <td>${t.from_user_id === currentUser.id ? 'Sent' : 'Received'}</td>
+            <td>${t.amount}</td>
+          </tr>
+        `).join('');
+
+        actionSection.innerHTML = `
+          <div class="bg-white p-4 rounded shadow">
+            <h2 class="text-lg font-semibold mb-2">Transfer History</h2>
+            <table class="w-full">
+              <thead><tr><th>Type</th><th>Amount</th></tr></thead>
+              <tbody>${rows}</tbody>
+            </table>
+          </div>
+        `;
+      } catch {
+        actionSection.innerHTML = `<p>Error loading transfer history</p>`;
       }
-    });
-  };
+    },
 
-  const loadChangePinForm = () => {
-    actionSection.innerHTML = `
-      <div class="bg-white p-4 rounded shadow">
-        <h3 class="font-semibold mb-2">Change PIN</h3>
-        <input id="oldPin" type="password" placeholder="Old PIN" class="input" />
-        <input id="newPin" type="password" placeholder="New PIN" class="input mt-2" />
-        <button id="submitPin" class="btn mt-2">Change PIN</button>
-      </div>`;
-
-    document.getElementById("submitPin").addEventListener("click", async () => {
-      const old_pin = document.getElementById("oldPin").value;
-      const new_pin = document.getElementById("newPin").value;
-
+    redeemPoints: async () => {
       try {
-        const res = await fetch(`${apiBase}/auth/change-pin`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-          body: JSON.stringify({ old_pin, new_pin }),
-        });
+        const res = await fetch(`${baseUrl}/redemption/rates`);
+        const rates = await res.json();
 
-        const data = await res.json();
-        alert(data.message || "PIN updated");
-      } catch (err) {
-        alert("Failed to change PIN.");
-      }
-    });
-  };
+        actionSection.innerHTML = `
+          <div class="bg-white p-4 rounded shadow">
+            <h2 class="text-lg font-semibold mb-2">Redeem Points</h2>
+            <form id="redeemForm" class="space-y-3">
+              <select id="redeemType" class="w-full border p-2 rounded">
+                <option value="bitcoin">Bitcoin</option>
+                <option value="gift_card">Gift Card</option>
+              </select>
+              <input id="pointsAmount" type="number" placeholder="Points" class="w-full border p-2 rounded" required>
+              <input id="walletAddress" type="text" placeholder="Wallet or Email" class="w-full border p-2 rounded" required>
+              <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Redeem</button>
+            </form>
+          </div>
+        `;
 
-  const loadRedemptionForm = async () => {
-    const res = await fetch(`${apiBase}/redemption/rates`);
-    const rates = await res.json();
+        document.getElementById('redeemForm').addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const type = document.getElementById('redeemType').value;
+          const points_amount = parseInt(document.getElementById('pointsAmount').value);
+          const wallet = document.getElementById('walletAddress').value;
 
-    actionSection.innerHTML = `
-      <div class="bg-white p-4 rounded shadow">
-        <h3 class="font-semibold mb-2">Redeem Points</h3>
-        <select id="redeemType" class="input mb-2">
-          <option value="bitcoin">Bitcoin (${rates.bitcoin_rate} BTC/point)</option>
-          <option value="giftcard">Gift Card (${rates.gift_card_rate} USD/point)</option>
-        </select>
-        <input id="redeemAmount" type="number" placeholder="Points" class="input mb-2" />
-        <input id="walletAddress" type="text" placeholder="Wallet/Email Address" class="input mb-2" />
-        <button id="submitRedemption" class="btn">Redeem</button>
-      </div>`;
-
-    document.getElementById("submitRedemption").addEventListener("click", async () => {
-      const type = document.getElementById("redeemType").value;
-      const points_amount = parseInt(document.getElementById("redeemAmount").value);
-      const wallet_address = document.getElementById("walletAddress").value;
-
-      try {
-        const res = await fetch(`${apiBase}/redemption/request`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
-          body: JSON.stringify({
+          const payload = {
             type,
             points_amount,
-            wallet_address,
-            email_address: currentUser.email,
-          }),
+            wallet_address: type === 'bitcoin' ? wallet : null,
+            email_address: type === 'gift_card' ? wallet : null
+          };
+
+          const redeemRes = await fetch(`${baseUrl}/redemption/request`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify(payload)
+          });
+
+          const msg = await redeemRes.json();
+          alert(msg.message || 'Redemption Submitted');
+          fetchStats(); // update balance
         });
 
-        const data = await res.json();
-        alert(data.message || "Redemption requested");
-        loadDashboardStats();
       } catch (err) {
-        alert("Redemption failed");
+        actionSection.innerHTML = `<p>Error loading redemption form</p>`;
       }
-    });
+    },
+
+    transferPoints: () => {
+      actionSection.innerHTML = `
+        <div class="bg-white p-4 rounded shadow">
+          <h2 class="text-lg font-semibold mb-2">Transfer Points</h2>
+          <form id="transferForm" class="space-y-3">
+            <input id="toEmail" type="email" placeholder="Recipient Email" class="w-full border p-2 rounded" required>
+            <input id="amount" type="number" placeholder="Amount" class="w-full border p-2 rounded" required>
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Send</button>
+          </form>
+        </div>
+      `;
+
+      document.getElementById('transferForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const to_email = document.getElementById('toEmail').value;
+        const amount = parseInt(document.getElementById('amount').value);
+
+        try {
+          const res = await fetch(`${baseUrl}/points/transfer`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`
+            },
+            body: JSON.stringify({ to_email, amount })
+          });
+
+          const data = await res.json();
+          alert(data.message || 'Transfer successful');
+          fetchStats();
+        } catch (err) {
+          alert('Transfer failed');
+        }
+      });
+    },
+
+    changePassword: () => {
+      actionSection.innerHTML = `
+        <div class="bg-white p-4 rounded shadow">
+          <h2 class="text-lg font-semibold mb-2">Change Password</h2>
+          <form id="changePasswordForm" class="space-y-3">
+            <input type="password" id="oldPassword" placeholder="Old Password" class="w-full border p-2 rounded" required>
+            <input type="password" id="newPassword" placeholder="New Password" class="w-full border p-2 rounded" required>
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Change</button>
+          </form>
+        </div>
+      `;
+
+      document.getElementById('changePasswordForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        // Implement API call if route exists
+        alert('Change Password: Backend route integration pending');
+      });
+    },
+
+    changePin: () => {
+      actionSection.innerHTML = `
+        <div class="bg-white p-4 rounded shadow">
+          <h2 class="text-lg font-semibold mb-2">Change PIN</h2>
+          <form id="changePinForm" class="space-y-3">
+            <input type="password" id="oldPin" placeholder="Old PIN" class="w-full border p-2 rounded" required>
+            <input type="password" id="newPin" placeholder="New PIN" class="w-full border p-2 rounded" required>
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Change</button>
+          </form>
+        </div>
+      `;
+
+      document.getElementById('changePinForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        alert('Change PIN: Backend route integration pending');
+      });
+    },
+
+    logout: () => {
+      sessionStorage.clear();
+      window.location.href = '/login.html';
+    }
   };
 
-  const logout = () => {
-    sessionStorage.clear();
-    window.location.href = "/login";
-  };
-
-  // Menu Handlers
-  const sectionHandlers = {
-    profile: loadProfile,
-    "transfer-history": () => alert("Transfer history not implemented yet."),
-    "redeem-points": loadRedemptionForm,
-    "transfer-points": loadTransferForm,
-    "change-password": loadChangePasswordForm,
-    "change-pin": loadChangePinForm,
-    logout: logout,
-  };
-
-  // Menu Clicks
-  document.querySelectorAll("[data-section]").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const section = btn.getAttribute("data-section");
-      if (sectionHandlers[section]) sectionHandlers[section]();
-      menuDropdown.classList.add("hidden");
+  // ===== BIND MENU ITEM CLICKS =====
+  document.querySelectorAll('.menu-item').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      menu.classList.add('hidden');
+      const action = btn.dataset.action;
+      if (sectionHandlers[action]) sectionHandlers[action]();
     });
   });
 
-  loadDashboardStats();
+  // Initial Wallet Fetch
+  fetchStats();
 });
