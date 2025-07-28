@@ -4,17 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>User Dashboard</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
   <script defer src="dashboard.js"></script>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-100 text-gray-800 min-h-screen">
-  <!-- Top Bar -->
   <div class="bg-white shadow p-4 flex justify-between items-center">
     <h1 class="text-xl font-bold">User Dashboard</h1>
-    <button id="menuToggle" class="px-4 py-2 bg-blue-500 text-white rounded">☰ Menu</button>
+    <button id="menuToggle" class="px-4 py-2 bg-blue-500 text-white rounded">\u2630 Menu</button>
   </div>
 
-  <!-- Toggle Menu -->
   <div id="sideMenu" class="absolute top-16 right-4 w-48 bg-white shadow-md rounded hidden z-50">
     <ul class="divide-y divide-gray-200">
       <li class="menu-item p-3 hover:bg-gray-100 cursor-pointer" data-section="profile">View Profile</li>
@@ -27,18 +25,20 @@
     </ul>
   </div>
 
-  <!-- Main Content Area -->
   <div id="mainContent" class="p-6">
     <div id="dashboardHome">
       <h2 class="text-lg font-semibold mb-4">Welcome to your dashboard</h2>
-      <!-- Survey API placeholder -->
+
+      <div id="walletContainer" class="bg-white p-4 shadow rounded mb-4">
+        <h3 class="font-semibold mb-1">Wallet Balance</h3>
+        <p class="text-xl font-bold text-green-600" id="walletBalance">Loading...</p>
+      </div>
+
       <div class="bg-white p-4 shadow rounded">
         <h3 class="font-medium mb-2">Available Surveys</h3>
         <div id="surveyPlaceholder" class="text-sm text-gray-500">Survey provider integration goes here...</div>
       </div>
     </div>
-
-    <!-- Dynamic Section Placeholder -->
     <div id="actionSection" class="mt-6"></div>
   </div>
 </body>
