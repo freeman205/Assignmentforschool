@@ -4,10 +4,15 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>User Dashboard</title>
-  <script defer src="dashboard.js"></script>
+
+  <!-- TailwindCSS -->
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+
+  <!-- JavaScript -->
+  <script defer src="dashboard.js"></script>
 </head>
 <body class="bg-gray-100 text-gray-800 min-h-screen">
+
   <!-- Top Bar -->
   <div class="bg-white shadow p-4 flex justify-between items-center">
     <h1 class="text-xl font-bold">User Dashboard</h1>
@@ -28,8 +33,8 @@
   </div>
 
   <!-- Main Content Area -->
-  <div id="mainContent" class="p-6">
-    <div id="dashboardHome">
+  <main id="mainContent" class="p-6">
+    <section id="dashboardHome">
       <h2 class="text-lg font-semibold mb-4">Welcome to your dashboard</h2>
 
       <!-- Wallet Balance Container -->
@@ -43,10 +48,11 @@
         <h3 class="font-medium mb-2">Available Surveys</h3>
         <div id="surveyPlaceholder" class="text-sm text-gray-500">Survey provider integration goes here...</div>
       </div>
-    </div>
+    </section>
 
     <!-- Dynamic Section Placeholder -->
-    <div id="actionSection" class="mt-6"></div>
-  </div>
+    <section id="actionSection" class="mt-6"></section>
+  </main>
+
 </body>
 </html>
