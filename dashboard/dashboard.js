@@ -170,7 +170,6 @@ actionSection.innerHTML = `
       </div>
     `;
 
-    // ✅ Corrected payload keys
     document.getElementById('redeemForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const form = e.target;
