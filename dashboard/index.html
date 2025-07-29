@@ -32,21 +32,34 @@
   <main id="mainContent" class="p-6 space-y-6">
     <!-- Dashboard Overview -->
     <section id="dashboardHome">
-      <h2 class="text-xl font-semibold mb-4">Welcome Back!</h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div class="bg-white p-4 rounded shadow">
-          <h3 class="font-semibold text-gray-600">Wallet Balance</h3>
-          <p class="text-2xl font-bold text-green-600" id="walletBalance">₦0.00</p>
-        </div>
-        <div class="bg-white p-4 rounded shadow">
-          <h3 class="font-semibold text-gray-600">Surveys Completed</h3>
-          <p class="text-2xl font-bold text-blue-600" id="completedSurveys">0</p>
-        </div>
-        <div class="bg-white p-4 rounded shadow">
-          <h3 class="font-semibold text-gray-600">Pending Redemptions</h3>
-          <p class="text-2xl font-bold text-yellow-600" id="pendingRedemptions">₦0.00</p>
-        </div>
-      </div>
+  <h2 class="text-xl font-semibold mb-4">Welcome Back!</h2>
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+    
+    <!-- Wallet Balance -->
+    <div class="bg-white p-4 rounded shadow">
+      <h3 class="font-semibold text-gray-600">Wallet Balance</h3>
+      <p class="text-2xl font-bold text-green-600" id="walletBalance">0 pts</p>
+    </div>
+
+    <!-- Completed Surveys -->
+    <div class="bg-white p-4 rounded shadow">
+      <h3 class="font-semibold text-gray-600">Surveys Completed</h3>
+      <p class="text-2xl font-bold text-blue-600" id="completedSurveys">0</p>
+    </div>
+
+    <!-- Pending Redemptions -->
+    <div class="bg-white p-4 rounded shadow">
+      <h3 class="font-semibold text-gray-600">Pending Redemptions</h3>
+      <p class="text-2xl font-bold text-yellow-600" id="pendingRedemptions">0</p>
+    </div>
+
+    <!-- Total Earned -->
+    <div class="bg-white p-4 rounded shadow">
+      <h3 class="font-semibold text-gray-600">Total Earned</h3>
+      <p class="text-2xl font-bold text-purple-600" id="totalEarned">0 pts</p>
+    </div>
+
+  </div>
     </section>
 
     <!-- Survey Section -->
