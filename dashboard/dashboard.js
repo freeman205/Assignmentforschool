@@ -301,6 +301,12 @@ actionSection.innerHTML = `
     const receiver_email = form.receiver_email.value.trim();
     const amount = parseInt(form.amount.value.trim());
 
+    if (!receiver_email || isNaN(amount) || amount <= 0) {
+      messageEl.textContent = '❌ Please enter a valid email and amount greater than zero.';
+      messageEl.className = 'mt-4 text-sm text-red-600 text-center';
+      return;
+    }
+
     messageEl.textContent = '⏳ Sending...';
     messageEl.className = 'mt-4 text-sm text-blue-600 text-center';
 
@@ -311,7 +317,7 @@ actionSection.innerHTML = `
           Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ receiver_email, amount })
+        body: JSON.stringify({ to_email: receiver_email, amount })
       });
 
       const result = await res.json();
