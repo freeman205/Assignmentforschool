@@ -152,8 +152,16 @@ actionSection.innerHTML = `
     });
 
     const rates = await res.json();
-    const btcPtsPerDollar = (1 / parseFloat(rates.bitcoin_rate)).toFixed(0);
-    const giftPtsPerDollar = (1 / parseFloat(rates.gift_card_rate)).toFixed(0);
+    const btcRate = parseFloat(rates.bitcoin_rate);
+    const giftRate = parseFloat(rates.gift_card_rate);
+
+    if (!btcRate || !giftRate) {
+      actionSection.innerHTML = 'Redemption rates not available.';
+      return;
+    }
+
+    const btcPtsPerDollar = (1 / btcRate).toFixed(0);
+    const giftPtsPerDollar = (1 / giftRate).toFixed(0);
 
     actionSection.innerHTML = `
       <div class="bg-white p-6 rounded-lg shadow">
@@ -198,7 +206,11 @@ actionSection.innerHTML = `
         if (r.ok) {
           alert("Redemption request submitted");
         } else {
-          alert(`Failed to redeem: ${result.detail || 'Unknown error'}`);
+          const errorText =
+            typeof result.detail === 'string'
+              ? result.detail
+              : JSON.stringify(result.detail || result);
+          alert(`Failed to redeem: ${errorText}`);
         }
       } catch (err) {
         alert("Error redeeming");
