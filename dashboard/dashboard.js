@@ -117,15 +117,29 @@ actionSection.innerHTML = `
     const data = await res.json();
 
     actionSection.innerHTML = `
-      <div class="bg-white p-6 rounded-lg shadow">
-        <h3 class="text-lg font-bold mb-2">Transfer History</h3>
-        <ul class="list-disc pl-5">
-          ${data.history.map(item => `
-            <li>${item.amount} points to ${item.recipient} on ${new Date(item.timestamp).toLocaleDateString()}</li>
-          `).join('')}
-        </ul>
-      </div>
-    `;
+  <div class="bg-white p-6 rounded-lg shadow">
+    <h3 class="text-lg font-bold mb-2">Transfer History</h3>
+    <ul class="space-y-2">
+      ${data.transfers.map(item => {
+        const isSender = item.from_user.email === currentUser.email;
+        const direction = isSender ? 'to' : 'from';
+        const otherParty = isSender ? item.to_user : item.from_user;
+
+        return `
+          <li class="text-sm text-gray-700">
+            <strong>${item.amount} pts</strong> ${direction} <strong>${otherParty.name} (${otherParty.email})</strong>
+            on <em>${new Date(item.created_at).toLocaleString()}</em>
+          </li>
+        `;
+      }).join('')}
+    </ul>
+
+    <div class="mt-4 text-sm text-gray-600">
+      <p><strong>Total Sent:</strong> ${data.total_sent} pts</p>
+      <p><strong>Total Received:</strong> ${data.total_received} pts</p>
+    </div>
+  </div>
+`;
   } catch {
     actionSection.innerHTML = 'Failed to load transfer history.';
   }
