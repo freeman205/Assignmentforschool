@@ -233,7 +233,7 @@ actionSection.innerHTML = `
     });
     const data = await res.json();
 
-    if (data.length === 0) {
+    if (!data.length) {
       actionSection.innerHTML = `
         <div class="bg-white p-6 rounded-lg shadow">
           <p class="text-gray-500">No redemption history found.</p>
@@ -245,14 +245,20 @@ actionSection.innerHTML = `
     actionSection.innerHTML = `
       <div class="bg-white p-6 rounded-lg shadow">
         <h3 class="text-lg font-bold mb-4">🧾 Redemption History</h3>
-        <ul class="space-y-3">
+        <ul class="space-y-4">
           ${data.map(item => `
-            <li class="border p-3 rounded bg-gray-50 text-sm text-gray-700">
-              <p><strong>Type:</strong> ${item.type}</p>
-              <p><strong>Points:</strong> ${item.points_amount}</p>
-              <p><strong>Value:</strong> ${item.equivalent_value}</p>
-              <p><strong>Status:</strong> <span class="${item.status === 'approved' ? 'text-green-600' : item.status === 'pending' ? 'text-yellow-600' : 'text-red-600'}">${item.status}</span></p>
-              <p><em>${new Date(item.created_at).toLocaleString()}</em></p>
+            <li class="border p-4 rounded bg-gray-50 shadow-sm text-sm">
+              <div class="flex justify-between items-center mb-2">
+                <h4 class="font-semibold capitalize text-gray-800">🔁 ${item.type}</h4>
+                <span class="px-2 py-1 text-xs font-medium rounded-full ${
+                  item.status === 'approved' ? 'bg-green-100 text-green-800' :
+                  item.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
+                  'bg-red-100 text-red-800'
+                }">${item.status}</span>
+              </div>
+              <p class="text-gray-700"><strong>Points:</strong> ${item.points_amount}</p>
+              <p class="text-gray-700"><strong>Value:</strong> ${item.equivalent_value}</p>
+              <p class="text-gray-500 mt-1"><strong>Submitted:</strong> ${new Date(item.created_at).toLocaleString()}</p>
             </li>
           `).join('')}
         </ul>
