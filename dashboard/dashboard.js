@@ -41,11 +41,12 @@ document.addEventListener('click', (e) => {
 
     const data = await res.json();
 
-    // Set stats dynamically
+    // Set stats dynamically in points
     document.getElementById("walletBalance").textContent = `${data.points_balance} pts`;
     document.getElementById("completedSurveys").textContent = data.completed_surveys;
     document.getElementById("pendingRedemptions").textContent = data.pending_redemptions;
-    document.getElementById("totalEarned").textContent = `₦${data.total_earned.toFixed(2)}`;
+    document.getElementById("totalEarned").textContent = `${data.total_earned} pts`;
+
   } catch (err) {
     console.error("Dashboard stats error:", err);
     document.getElementById("walletBalance").textContent = "Error";
