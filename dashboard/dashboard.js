@@ -213,8 +213,8 @@ actionSection.innerHTML = `
           alert(`Failed to redeem: ${errorText}`);
         }
       } catch (err) {
-        alert("Error redeeming");
-        console.error(err);
+  alert("Error redeeming. Check console for details.");
+  console.error("Redemption Error:", err);
       }
     });
 
