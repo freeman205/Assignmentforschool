@@ -90,14 +90,20 @@ document.addEventListener('click', (e) => {
       headers: { Authorization: `Bearer ${accessToken}` }
     });
     const user = await res.json();
-    actionSection.innerHTML = `
-      <div class="bg-white p-6 rounded-lg shadow">
-        <h3 class="text-lg font-bold mb-2">Your Profile</h3>
-        <p><strong>Email:</strong> ${user.email}</p>
-        <p><strong>Full Name:</strong> ${user.full_name || 'N/A'}</p>
-        <p><strong>Username:</strong> ${user.username || 'N/A'}</p>
-      </div>
-    `;
+actionSection.innerHTML = `
+  <div class="bg-white p-6 rounded-lg shadow">
+    <h3 class="text-lg font-bold mb-2">Your Profile</h3>
+    <p><strong>Email:</strong> ${user.email}</p>
+    <p><strong>Full Name:</strong> ${user.name || 'N/A'}</p>
+    <p><strong>Status:</strong> ${user.status}</p>
+    <p><strong>Points Balance:</strong> ${user.points_balance}</p>
+    <p><strong>Referral Code:</strong> ${user.referral_code || 'N/A'}</p>
+    <p><strong>Email Verified:</strong> ${user.email_verified ? 'Yes' : 'No'}</p>
+    <p><strong>Admin:</strong> ${user.is_admin ? 'Yes' : 'No'}</p>
+    <p><strong>Agent:</strong> ${user.is_agent ? 'Yes' : 'No'}</p>
+    <p><strong>Created At:</strong> ${new Date(user.created_at).toLocaleString()}</p>
+  </div>
+`;
   } catch {
     actionSection.innerHTML = 'Failed to load profile.';
   }
