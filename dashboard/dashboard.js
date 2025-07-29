@@ -163,21 +163,28 @@ actionSection.innerHTML = `
             <option value="btc">Bitcoin (${btcPtsPerDollar} pts/$)</option>
             <option value="giftcard">Gift Card (${giftPtsPerDollar} pts/$)</option>
           </select>
-          <input name="amount" type="number" placeholder="Amount to redeem" class="w-full border p-2 rounded" required />
-          <input name="destination" placeholder="Wallet or Email" class="w-full border p-2 rounded" required />
+          <input name="amount" type="number" placeholder="Points to redeem" class="w-full border p-2 rounded" required />
+          <input name="destination" placeholder="Wallet (BTC) or Email (Gift Card)" class="w-full border p-2 rounded" required />
           <button class="bg-blue-600 text-white px-4 py-2 rounded">Redeem</button>
         </form>
       </div>
     `;
 
+    // ✅ Corrected payload keys
     document.getElementById('redeemForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const form = e.target;
+      const type = form.type.value;
+      const amount = parseFloat(form.amount.value);
+      const destination = form.destination.value;
+
       const payload = {
-        type: form.type.value,
-        amount: form.amount.value,
-        destination: form.destination.value
+        type,
+        points_amount: amount,
+        ...(type === "btc" && { wallet_address: destination }),
+        ...(type === "giftcard" && { email_address: destination })
       };
+
       try {
         const r = await fetch(`${apiUrl}/redemption/request`, {
           method: 'POST',
@@ -187,11 +194,19 @@ actionSection.innerHTML = `
           },
           body: JSON.stringify(payload)
         });
-        alert(r.ok ? "Redemption request submitted" : "Failed to redeem");
-      } catch {
+
+        const result = await r.json();
+        if (r.ok) {
+          alert("Redemption request submitted");
+        } else {
+          alert(`Failed to redeem: ${result.detail || 'Unknown error'}`);
+        }
+      } catch (err) {
         alert("Error redeeming");
+        console.error(err);
       }
     });
+
   } catch {
     actionSection.innerHTML = 'Failed to load rates.';
   }
