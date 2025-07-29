@@ -226,6 +226,47 @@ actionSection.innerHTML = `
   }
   }
 
+  async function loadRedemptionHistory() {
+  try {
+    const res = await fetch(`${apiUrl}/redemption/history`, {
+      headers: { Authorization: `Bearer ${accessToken}` }
+    });
+    const data = await res.json();
+
+    if (data.length === 0) {
+      actionSection.innerHTML = `
+        <div class="bg-white p-6 rounded-lg shadow">
+          <p class="text-gray-500">No redemption history found.</p>
+        </div>
+      `;
+      return;
+    }
+
+    actionSection.innerHTML = `
+      <div class="bg-white p-6 rounded-lg shadow">
+        <h3 class="text-lg font-bold mb-4">🧾 Redemption History</h3>
+        <ul class="space-y-3">
+          ${data.map(item => `
+            <li class="border p-3 rounded bg-gray-50 text-sm text-gray-700">
+              <p><strong>Type:</strong> ${item.type}</p>
+              <p><strong>Points:</strong> ${item.points_amount}</p>
+              <p><strong>Value:</strong> ${item.equivalent_value}</p>
+              <p><strong>Status:</strong> <span class="${item.status === 'approved' ? 'text-green-600' : item.status === 'pending' ? 'text-yellow-600' : 'text-red-600'}">${item.status}</span></p>
+              <p><em>${new Date(item.created_at).toLocaleString()}</em></p>
+            </li>
+          `).join('')}
+        </ul>
+      </div>
+    `;
+  } catch {
+    actionSection.innerHTML = `
+      <div class="bg-white p-4 rounded shadow text-red-600">
+        Failed to load redemption history.
+      </div>
+    `;
+  }
+  }
+
   function loadTransferForm() {
     actionSection.innerHTML = `
       <div class="bg-white p-6 rounded-lg shadow">
