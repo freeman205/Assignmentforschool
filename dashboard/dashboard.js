@@ -340,30 +340,21 @@ actionSection.innerHTML = `
   });
   }
 
-  async function loadChangePasswordForm() {
+  function loadPasswordForm(accessToken) {
   actionSection.innerHTML = `
     <div class="bg-white p-6 rounded-lg shadow max-w-md mx-auto">
       <h3 class="text-lg font-bold mb-4">🔐 Change Password</h3>
-      <form id="changePasswordForm" class="space-y-4">
-        <div>
-          <label class="block text-sm font-medium text-gray-700">Current Password</label>
-          <input name="current_password" type="password" placeholder="Enter current password" class="w-full border p-2 rounded" required />
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700">New Password</label>
-          <input name="new_password" type="password" placeholder="Enter new password" class="w-full border p-2 rounded" required />
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-gray-700">Confirm New Password</label>
-          <input name="confirm_password" type="password" placeholder="Confirm new password" class="w-full border p-2 rounded" required />
-        </div>
+      <form id="passwordForm" class="space-y-4">
+        <input type="password" name="current_password" placeholder="Current Password" class="w-full border p-2 rounded" required />
+        <input type="password" name="new_password" placeholder="New Password" class="w-full border p-2 rounded" required />
+        <input type="password" name="confirm_password" placeholder="Confirm New Password" class="w-full border p-2 rounded" required />
         <button type="submit" class="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">Change Password</button>
       </form>
       <div id="passwordChangeMessage" class="mt-4 text-sm text-center"></div>
     </div>
   `;
 
-  const form = document.getElementById('changePasswordForm');
+  const form = document.getElementById('passwordForm');
   const messageEl = document.getElementById('passwordChangeMessage');
 
   form.addEventListener('submit', async (e) => {
@@ -387,24 +378,21 @@ actionSection.innerHTML = `
         method: 'POST',
         headers: {
           Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           current_password,
           new_password
-        }),
+        })
       });
 
-      const result = await res.json();
+      const data = await res.json();
 
-      if (!res.ok) {
-        throw new Error(result.detail || 'Failed to change password');
-      }
+      if (!res.ok) throw new Error(data.detail || 'Failed to change password');
 
       messageEl.textContent = '✅ Password changed successfully!';
       messageEl.className = 'mt-4 text-sm text-green-600 text-center';
       form.reset();
-
     } catch (err) {
       messageEl.textContent = `❌ ${err.message}`;
       messageEl.className = 'mt-4 text-sm text-red-600 text-center';
