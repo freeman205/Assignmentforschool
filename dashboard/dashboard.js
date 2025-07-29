@@ -32,17 +32,27 @@ document.addEventListener('click', (e) => {
 
   // Load wallet balance
   async function loadDashboardStats() {
-    try {
-      const res = await fetch(`${apiUrl}/dashboard/stats`, {
-        headers: { Authorization: `Bearer ${accessToken}` }
-      });
-      if (!res.ok) throw new Error("Stats error");
-      const data = await res.json();
-      walletBalanceEl.textContent = `${data.points_balance} pts`;
-    } catch (err) {
-      walletBalanceEl.textContent = "Error loading";
-      console.error("Wallet error:", err);
-    }
+  try {
+    const res = await fetch(`${apiUrl}/dashboard/stats`, {
+      headers: { Authorization: `Bearer ${accessToken}` }
+    });
+
+    if (!res.ok) throw new Error("Stats error");
+
+    const data = await res.json();
+
+    // Set stats dynamically
+    document.getElementById("walletBalance").textContent = `${data.points_balance} pts`;
+    document.getElementById("completedSurveys").textContent = data.completed_surveys;
+    document.getElementById("pendingRedemptions").textContent = data.pending_redemptions;
+    document.getElementById("totalEarned").textContent = `₦${data.total_earned.toFixed(2)}`;
+  } catch (err) {
+    console.error("Dashboard stats error:", err);
+    document.getElementById("walletBalance").textContent = "Error";
+    document.getElementById("completedSurveys").textContent = "Error";
+    document.getElementById("pendingRedemptions").textContent = "Error";
+    document.getElementById("totalEarned").textContent = "Error";
+  }
   }
 
   // Section handler
