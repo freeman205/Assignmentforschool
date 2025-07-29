@@ -273,38 +273,65 @@ actionSection.innerHTML = `
   }
   }
 
-  function loadTransferForm() {
-    actionSection.innerHTML = `
-      <div class="bg-white p-6 rounded-lg shadow">
-        <h3 class="text-lg font-bold mb-4">Transfer Points</h3>
-        <form id="transferForm" class="space-y-4">
-          <input name="receiver_email" placeholder="Receiver Email" class="w-full border p-2 rounded" required />
-          <input name="amount" type="number" placeholder="Amount" class="w-full border p-2 rounded" required />
-          <button class="bg-green-600 text-white px-4 py-2 rounded">Send</button>
-        </form>
-      </div>
-    `;
-    document.getElementById('transferForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const form = e.target;
-      const payload = {
-        receiver_email: form.receiver_email.value,
-        amount: parseInt(form.amount.value)
-      };
-      try {
-        const res = await fetch(`${apiUrl}/points/transfer`, {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(payload)
-        });
-        alert(res.ok ? 'Transfer successful' : 'Transfer failed');
-      } catch {
-        alert('Transfer error');
+  async function loadTransferForm() {
+  actionSection.innerHTML = `
+    <div class="bg-white p-6 rounded-lg shadow max-w-md mx-auto">
+      <h3 class="text-lg font-bold mb-4">💸 Transfer Points</h3>
+      <form id="transferForm" class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Receiver Email</label>
+          <input name="receiver_email" type="email" placeholder="e.g. user@example.com" class="w-full border p-2 rounded" required />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Amount</label>
+          <input name="amount" type="number" placeholder="Enter amount" class="w-full border p-2 rounded" required min="1" />
+        </div>
+        <button type="submit" class="w-full bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">Send Points</button>
+      </form>
+      <div id="transferMessage" class="mt-4 text-sm text-center"></div>
+    </div>
+  `;
+
+  const form = document.getElementById('transferForm');
+  const messageEl = document.getElementById('transferMessage');
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const receiver_email = form.receiver_email.value.trim();
+    const amount = parseInt(form.amount.value.trim());
+
+    messageEl.textContent = '⏳ Sending...';
+    messageEl.className = 'mt-4 text-sm text-blue-600 text-center';
+
+    try {
+      const res = await fetch(`${apiUrl}/points/transfer`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ receiver_email, amount })
+      });
+
+      const result = await res.json();
+
+      if (!res.ok) {
+        throw new Error(result.detail || 'Transfer failed');
       }
-    });
+
+      messageEl.textContent = '✅ Transfer successful!';
+      messageEl.className = 'mt-4 text-sm text-green-600 text-center';
+      form.reset();
+
+      // Optional: Refresh balance or history
+      if (typeof loadDashboardStats === 'function') loadDashboardStats();
+
+    } catch (err) {
+      messageEl.textContent = `❌ ${err.message}`;
+      messageEl.className = 'mt-4 text-sm text-red-600 text-center';
+    }
+  });
   }
 
   function loadPasswordForm() {
