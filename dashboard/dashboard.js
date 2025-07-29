@@ -9,17 +9,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const actionSection = document.getElementById('actionSection');
 
   // Toggle side menu
-  menuToggle.addEventListener('click', (e) => {
-    e.stopPropagation();
-    sideMenu.classList.toggle('-translate-x-full');
-  });
+menuToggle.addEventListener('click', (e) => {
+  e.stopPropagation();
+  sideMenu.classList.toggle('hidden');
+});
 
-  // Close side menu on outside click
-  document.addEventListener('click', (e) => {
-    if (!sideMenu.contains(e.target) && e.target !== menuToggle) {
-      sideMenu.classList.add('-translate-x-full');
-    }
-  });
+// Close side menu on outside click
+document.addEventListener('click', (e) => {
+  if (!sideMenu.contains(e.target) && e.target !== menuToggle) {
+    sideMenu.classList.add('hidden');
+  }
+});
 
   // Handle menu item clicks
   document.querySelectorAll('[data-section]').forEach(item => {
