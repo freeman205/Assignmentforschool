@@ -85,24 +85,11 @@ document.addEventListener('click', (e) => {
   }
 
   async function loadProfile() {
-  const accessToken = sessionStorage.getItem('accessToken'); // ✅ Safe and always fresh
-
-  if (!accessToken) {
-    actionSection.innerHTML = `<p class="text-red-500">Not logged in.</p>`;
-    return;
-  }
-
   try {
     const res = await fetch(`${apiUrl}/users/me`, {
       headers: { Authorization: `Bearer ${accessToken}` }
     });
-
-    if (!res.ok) {
-      throw new Error('API call failed');
-    }
-
     const user = await res.json();
-
     actionSection.innerHTML = `
       <div class="bg-white p-6 rounded-lg shadow">
         <h3 class="text-lg font-bold mb-2">Your Profile</h3>
@@ -111,9 +98,8 @@ document.addEventListener('click', (e) => {
         <p><strong>Username:</strong> ${user.username || 'N/A'}</p>
       </div>
     `;
-  } catch (err) {
-    console.error('Profile load error:', err);
-    actionSection.innerHTML = `<p class="text-red-500">Failed to load profile. Please try again later.</p>`;
+  } catch {
+    actionSection.innerHTML = 'Failed to load profile.';
   }
   }
 
