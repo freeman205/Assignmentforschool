@@ -47,39 +47,41 @@ document.addEventListener('click', (e) => {
 
   // Section handler
   async function handleMenuAction(section) {
-    actionSection.innerHTML = '';
+  actionSection.innerHTML = '';
 
-    if (!accessToken) {
-      actionSection.innerHTML = `<p class="text-red-500">You must be logged in.</p>`;
-      return;
-    }
+  const accessToken = sessionStorage.getItem('accessToken'); // Re-fetch here!
 
-    switch (section) {
-      case 'profile':
-        await loadProfile();
-        break;
-      case 'history':
-        await loadHistory();
-        break;
-      case 'redeem':
-        await loadRedemptionForm();
-        break;
-      case 'transfer':
-        loadTransferForm();
-        break;
-      case 'password':
-        loadPasswordForm();
-        break;
-      case 'pin':
-        loadPinForm();
-        break;
-      case 'logout':
-        sessionStorage.clear();
-        window.location.href = '/login';
-        break;
-      default:
-        actionSection.innerHTML = `<p class="text-red-500">Unknown section selected.</p>`;
-    }
+  if (!accessToken) {
+    actionSection.innerHTML = `<p class="text-red-500">You must be logged in.</p>`;
+    return;
+  }
+
+  switch (section) {
+    case 'profile':
+      await loadProfile(accessToken);
+      break;
+    case 'history':
+      await loadHistory(accessToken);
+      break;
+    case 'redeem':
+      await loadRedemptionForm(accessToken);
+      break;
+    case 'transfer':
+      loadTransferForm(accessToken);
+      break;
+    case 'password':
+      loadPasswordForm(accessToken);
+      break;
+    case 'pin':
+      loadPinForm(accessToken);
+      break;
+    case 'logout':
+      sessionStorage.clear();
+      window.location.href = '/login';
+      break;
+    default:
+      actionSection.innerHTML = `<p class="text-red-500">Unknown section selected.</p>`;
+  }
   }
 
   async function loadProfile() {
