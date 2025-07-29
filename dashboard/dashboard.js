@@ -66,6 +66,9 @@ document.addEventListener('click', (e) => {
     case 'redeem':
       await loadRedemptionForm(accessToken);
       break;
+    case 'redemptionHistory':
+      await loadRedemptionHistory(accessToken);
+      break;
     case 'transfer':
       loadTransferForm(accessToken);
       break;
