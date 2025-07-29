@@ -145,7 +145,10 @@ actionSection.innerHTML = `
   }
   }
 
-  async function loadRedemptionForm() {
+  async function loadRedemptionSection() {
+  const accessToken = sessionStorage.getItem("accessToken");
+  const actionSection = document.getElementById("actionSection");
+
   try {
     const res = await fetch(`${apiUrl}/redemption/rates`, {
       headers: { Authorization: `Bearer ${accessToken}` }
@@ -181,92 +184,54 @@ actionSection.innerHTML = `
     document.getElementById('redeemForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const form = e.target;
-      const type = form.type.value;
+      const rawType = form.type.value;
       const amount = parseFloat(form.amount.value);
       const destination = form.destination.value;
+
+      // Map frontend values to backend enums
+      const typeMap = {
+        btc: "bitcoin",
+        giftcard: "gift_card"
+      };
+      const type = typeMap[rawType];
 
       const payload = {
         type,
         points_amount: amount,
-        ...(type === "btc" && { wallet_address: destination }),
-        ...(type === "giftcard" && { email_address: destination })
+        ...(type === "bitcoin" && { wallet_address: destination }),
+        ...(type === "gift_card" && { email_address: destination })
       };
 
       try {
-  const res = await fetch(`${apiUrl}/redemption/rates`, {
-    headers: { Authorization: `Bearer ${accessToken}` }
-  });
+        const r = await fetch(`${apiUrl}/redemption/request`, {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
 
-  const rates = await res.json();
-  const btcRate = parseFloat(rates.bitcoin_rate);
-  const giftRate = parseFloat(rates.gift_card_rate);
+        const result = await r.json();
+        if (r.ok) {
+          alert("Redemption request submitted");
+        } else {
+          const errorText =
+            typeof result.detail === 'string'
+              ? result.detail
+              : JSON.stringify(result.detail || result);
+          alert(`Failed to redeem: ${errorText}`);
+        }
+      } catch (err) {
+        alert("Error redeeming");
+        console.error(err);
+      }
+    });
 
-  if (!btcRate || !giftRate) {
-    actionSection.innerHTML = 'Redemption rates not available.';
-    return;
+  } catch {
+    actionSection.innerHTML = 'Failed to load rates.';
   }
-
-  const btcPtsPerDollar = (1 / btcRate).toFixed(0);
-  const giftPtsPerDollar = (1 / giftRate).toFixed(0);
-
-  actionSection.innerHTML = `
-    <div class="bg-white p-6 rounded-lg shadow">
-      <h3 class="text-lg font-bold mb-4">Redeem Points</h3>
-      <form id="redeemForm" class="space-y-4">
-        <select name="type" class="w-full border p-2 rounded">
-          <option value="bitcoin">Bitcoin (${btcPtsPerDollar} pts/$)</option>
-          <option value="gift_card">Gift Card (${giftPtsPerDollar} pts/$)</option>
-        </select>
-        <input name="amount" type="number" placeholder="Points to redeem" class="w-full border p-2 rounded" required />
-        <input name="destination" placeholder="Wallet (BTC) or Email (Gift Card)" class="w-full border p-2 rounded" required />
-        <button class="bg-blue-600 text-white px-4 py-2 rounded">Redeem</button>
-      </form>
-    </div>
-  `;
-
-  document.getElementById('redeemForm').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const form = e.target;
-    const type = form.type.value;
-    const amount = parseFloat(form.amount.value);
-    const destination = form.destination.value;
-
-    const payload = {
-      type,
-      points_amount: amount,
-      ...(type === "bitcoin" && { wallet_address: destination }),
-      ...(type === "gift_card" && { email_address: destination })
-    };
-
-    try {
-      const r = await fetch(`${apiUrl}/redemption/request`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(payload)
-      });
-
-      const result = await r.json();
-      if (r.ok) {
-        alert("Redemption request submitted");
-      } else {
-        const errorText =
-          typeof result.detail === 'string'
-            ? result.detail
-            : JSON.stringify(result.detail || result);
-        alert(`Failed to redeem: ${errorText}`);
-      }
-    } catch (err) {
-      alert("Error redeeming");
-      console.error(err);
-    }
-  });
-
-} catch {
-  actionSection.innerHTML = 'Failed to load rates.';
-      }
+  }
 
   function loadTransferForm() {
     actionSection.innerHTML = `
