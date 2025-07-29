@@ -146,20 +146,9 @@ actionSection.innerHTML = `
   }
 
   async function loadRedemptionSection() {
-  const actionSection = document.getElementById('actionSection');
-  const accessToken = sessionStorage.getItem('accessToken');
-  const apiUrl = sessionStorage.getItem('apiUrl') || '/api'; // fallback default
-
-  if (!accessToken) {
-    actionSection.innerHTML = 'Not authenticated.';
-    return;
-  }
-
   try {
     const res = await fetch(`${apiUrl}/redemption/rates`, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`
-      }
+      headers: { Authorization: `Bearer ${accessToken}` }
     });
 
     const rates = await res.json();
@@ -175,17 +164,17 @@ actionSection.innerHTML = `
     const giftPtsPerDollar = (1 / giftRate).toFixed(0);
 
     actionSection.innerHTML = `
-      <div class="bg-white p-6 rounded-lg shadow">    
-        <h3 class="text-lg font-bold mb-4">Redeem Points</h3>    
-        <form id="redeemForm" class="space-y-4">    
-          <select name="type" class="w-full border p-2 rounded">    
-            <option value="bitcoin">Bitcoin (${btcPtsPerDollar} pts/$)</option>    
-            <option value="gift_card">Gift Card (${giftPtsPerDollar} pts/$)</option>    
-          </select>    
-          <input name="amount" type="number" placeholder="Points to redeem" class="w-full border p-2 rounded" required />    
-          <input name="destination" placeholder="Wallet (BTC) or Email (Gift Card)" class="w-full border p-2 rounded" required />    
-          <button class="bg-blue-600 text-white px-4 py-2 rounded">Redeem</button>    
-        </form>    
+      <div class="bg-white p-6 rounded-lg shadow">
+        <h3 class="text-lg font-bold mb-4">Redeem Points</h3>
+        <form id="redeemForm" class="space-y-4">
+          <select name="type" class="w-full border p-2 rounded">
+            <option value="bitcoin">Bitcoin (${btcPtsPerDollar} pts/$)</option>
+            <option value="gift_card">Gift Card (${giftPtsPerDollar} pts/$)</option>
+          </select>
+          <input name="amount" type="number" placeholder="Points to redeem" class="w-full border p-2 rounded" required />
+          <input name="destination" placeholder="Wallet (BTC) or Email (Gift Card)" class="w-full border p-2 rounded" required />
+          <button class="bg-blue-600 text-white px-4 py-2 rounded">Redeem</button>
+        </form>
       </div>
     `;
 
@@ -217,20 +206,18 @@ actionSection.innerHTML = `
         if (r.ok) {
           alert("Redemption request submitted");
         } else {
-          const errorText = typeof result.detail === 'string'
-            ? result.detail
-            : JSON.stringify(result.detail || result);
+          const errorText =
+            typeof result.detail === 'string'
+              ? result.detail
+              : JSON.stringify(result.detail || result);
           alert(`Failed to redeem: ${errorText}`);
         }
-
       } catch (err) {
         alert("Error redeeming");
         console.error(err);
       }
     });
-
-  } catch (err) {
-    console.error(err);
+  } catch {
     actionSection.innerHTML = 'Failed to load rates.';
   }
   }
