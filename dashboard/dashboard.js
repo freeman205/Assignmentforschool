@@ -145,7 +145,7 @@ actionSection.innerHTML = `
   }
   }
 
-  async function loadRedemptionSection() {
+  async function loadRedemptionForm() {
   try {
     const res = await fetch(`${apiUrl}/redemption/rates`, {
       headers: { Authorization: `Bearer ${accessToken}` }
@@ -217,6 +217,7 @@ actionSection.innerHTML = `
         console.error(err);
       }
     });
+
   } catch {
     actionSection.innerHTML = 'Failed to load rates.';
   }
