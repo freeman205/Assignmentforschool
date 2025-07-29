@@ -104,24 +104,33 @@ document.addEventListener('click', (e) => {
   }
 
   async function loadHistory() {
-    try {
-      const res = await fetch(`${apiUrl}/points/history`, {
-        headers: { Authorization: `Bearer ${accessToken}` }
-      });
-      const data = await res.json();
-      actionSection.innerHTML = `
-        <div class="bg-white p-6 rounded-lg shadow">
-          <h3 class="text-lg font-bold mb-2">Transfer History</h3>
-          <ul class="space-y-1 text-sm">
-            ${data.history.map(tx => `
-              <li>${tx.amount} pts → ${tx.receiver_email} on ${new Date(tx.timestamp).toLocaleString()}</li>
-            `).join('')}
-          </ul>
-        </div>
-      `;
-    } catch {
-      actionSection.innerHTML = 'Failed to load history.';
-    }
+  const accessToken = sessionStorage.getItem('accessToken'); // 🔥 Safe & always fresh
+  if (!accessToken) {
+    actionSection.innerHTML = 'Not logged in.';
+    return;
+  }
+
+  try {
+    const res = await fetch(`${apiUrl}/points/history`, {
+      headers: { Authorization: `Bearer ${accessToken}` }
+    });
+    const data = await res.json();
+    
+    actionSection.innerHTML = `
+      <div class="bg-white p-6 rounded-lg shadow">
+        <h3 class="text-lg font-bold mb-2">Transfer History</h3>
+        ${data.length === 0 ? '<p>No transfers yet.</p>' : data.map(tx => `
+          <div class="border-b py-2">
+            <p><strong>To:</strong> ${tx.recipient}</p>
+            <p><strong>Amount:</strong> ${tx.amount} points</p>
+            <p><strong>Date:</strong> ${new Date(tx.timestamp).toLocaleString()}</p>
+          </div>
+        `).join('')}
+      </div>
+    `;
+  } catch {
+    actionSection.innerHTML = 'Failed to load history.';
+  }
   }
 
   async function loadRedemptionForm() {
