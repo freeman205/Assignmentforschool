@@ -1,10 +1,8 @@
-/* Base styles for the dashboard */
-body {
-  font-family: "Inter", sans-serif;
-  @apply bg-gray-50 text-gray-700;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/* Utility classes for buttons and cards */
+/* Buttons */
 .btn-primary {
   @apply bg-emerald-600 text-white px-6 py-3 rounded-md font-semibold hover:bg-emerald-700 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 transition-colors duration-200;
 }
@@ -21,6 +19,7 @@ body {
   @apply text-emerald-600 hover:text-emerald-700 font-medium focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 rounded-md;
 }
 
+/* Cards */
 .card {
   @apply bg-white rounded-lg shadow-md p-6 mb-6 border border-gray-200;
 }
@@ -33,199 +32,133 @@ body {
   @apply text-xl font-semibold text-gray-800 mt-8 mb-4;
 }
 
-/* Stat cards for dashboard overview */
+/* Stat cards */
 .stat-card {
   @apply bg-white rounded-lg shadow-sm p-4 border border-gray-200;
 }
-
-.stat-card.bg-emerald-50 {
+.stat-card-emerald {
   @apply bg-emerald-50 border-emerald-200;
 }
-
 .stat-title {
   @apply text-sm font-medium text-gray-500 uppercase tracking-wide mb-1;
 }
-
 .stat-value {
   @apply text-3xl font-extrabold text-gray-900;
 }
-
-.stat-card.bg-emerald-50 .stat-value {
+.stat-card-emerald .stat-value {
   @apply text-emerald-600;
 }
 
-/* Sidebar specific styles */
-aside {
-  transition: transform 0.3s ease-in-out;
+/* Sidebar */
+.sidebar {
+  @apply fixed z-40 top-0 left-0 h-full w-64 bg-white shadow-md transform -translate-x-full transition-transform duration-300 ease-in-out md:relative md:translate-x-0 md:shadow-none;
 }
-
-body.sidebar-open aside#sidebar {
+body.sidebar-open .sidebar {
   transform: translateX(0);
 }
-
 #sidebarOverlay {
-  display: none; /* Hidden by default */
-  position: fixed;
-  inset: 0;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 30; /* Below sidebar, above main content */
+  @apply fixed inset-0 bg-black bg-opacity-50 z-30 hidden;
 }
-
 body.sidebar-open #sidebarOverlay {
-  display: block;
+  @apply block;
 }
-
 .nav-link {
-  @apply text-gray-600 font-medium;
+  @apply flex items-center gap-3 text-gray-600 px-4 py-2 rounded-md hover:bg-emerald-50 hover:text-emerald-700 transition;
 }
-
 .nav-link.active {
   @apply bg-emerald-100 text-emerald-800 font-semibold;
 }
 
-.nav-link:hover:not(.active) {
-  @apply bg-emerald-50 text-emerald-700;
+/* Main content layout */
+.main-content-wrapper {
+  @apply flex-1 p-6 md:p-8 space-y-6 max-w-7xl mx-auto w-full;
 }
 
-/* Message styles */
-.message {
-  @apply p-3 rounded-md text-sm;
-}
-
-.message.success {
-  @apply bg-green-100 text-green-800 border border-green-200;
-}
-
-.message.error {
-  @apply bg-red-100 text-red-800 border border-red-200;
-}
-
-.message.info {
-  @apply bg-blue-100 text-blue-800 border border-blue-200;
-}
-
-.empty-state {
-  @apply text-center text-gray-500 py-8;
-}
-
-/* Table styles */
-.data-table {
-  @apply min-w-full divide-y divide-gray-200;
-}
-
-.data-table th {
-  @apply px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50;
-}
-
-.data-table td {
-  @apply px-6 py-4 whitespace-nowrap text-sm text-gray-800;
-}
-
-.data-table tbody tr:nth-child(even) {
-  @apply bg-gray-50;
-}
-
-.data-table tbody tr:hover {
-  @apply bg-gray-100;
-}
-
-/* Form input styles */
+/* Form Inputs */
 .form-card {
   @apply bg-white rounded-lg shadow-sm p-6 border border-gray-200 space-y-4;
 }
-
 .form-label {
   @apply block text-sm font-medium text-gray-700 mb-1;
 }
-
 .form-input {
   @apply mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-emerald-500 focus:border-emerald-500 sm:text-sm;
 }
 
-/* Footer Accordion (Mobile/Tablet) */
+/* Messages */
+.message {
+  @apply p-3 rounded-md text-sm;
+}
+.message.success {
+  @apply bg-green-100 text-green-800 border border-green-200;
+}
+.message.error {
+  @apply bg-red-100 text-red-800 border border-red-200;
+}
+.message.info {
+  @apply bg-blue-100 text-blue-800 border border-blue-200;
+}
+
+/* Empty state */
+.empty-state {
+  @apply text-center text-gray-500 py-8;
+}
+
+/* Tables */
+.data-table {
+  @apply min-w-full divide-y divide-gray-200;
+}
+.data-table th {
+  @apply px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider bg-gray-50;
+}
+.data-table td {
+  @apply px-6 py-4 whitespace-nowrap text-sm text-gray-800;
+}
+.data-table tbody tr:nth-child(even) {
+  @apply bg-gray-50;
+}
+.data-table tbody tr:hover {
+  @apply bg-gray-100;
+}
+
+/* Accordion */
 .accordion-item {
   @apply border-b border-gray-700 last:border-b-0;
 }
-
 .accordion-trigger {
   @apply flex justify-between items-center w-full py-3 text-lg font-semibold text-gray-300 hover:text-white transition-colors duration-200;
 }
-
 .accordion-content {
   @apply pb-3;
 }
-
 .accordion-content ul li a {
   @apply block py-1 text-gray-400 hover:text-white transition-colors duration-200;
 }
 
-/* Responsive adjustments */
-@media (min-width: 768px) {
-  /* md breakpoint */
-  aside#sidebar {
-    transform: translateX(0); /* Always visible on desktop */
-    position: sticky; /* Make sidebar sticky on desktop */
-    top: 1.5rem; /* Adjust top position */
-    height: fit-content;
-    max-width: 16rem; /* md:max-w-xs is 12rem, w-64 is 16rem. Let's stick to w-64 for consistency with the HTML */
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  body.sidebar-open #sidebarOverlay {
-    display: none; /* Hide overlay on desktop */
-  }
-
-  /* Adjust main content margin for sidebar width */
-  main {
-    display: flex;
-    flex-direction: row; /* Arrange sidebar and main content side-by-side */
-    gap: 2rem; /* Gap between sidebar and main content */
-  }
-
-  main > div:last-child {
-    /* This targets the main content div */
-    margin-left: 0; /* Remove auto margin for main content when sidebar is sticky */
-    margin-right: 0;
-  }
-}
-
-/* Lucide icons styling */
-.lucide {
-  display: inline-block;
-  vertical-align: middle;
-}
-
-/* Toast notifications */
+/* Toasts */
 .toast {
   @apply bg-white p-4 rounded-md shadow-lg border border-gray-200 flex items-center gap-3;
 }
-
 .toast.success {
   @apply border-green-400 text-green-800;
 }
-
 .toast.error {
   @apply border-red-400 text-red-800;
 }
-
 .toast.info {
   @apply border-blue-400 text-blue-800;
 }
-
 .toast-icon {
   @apply size-5;
 }
-
 .toast-message {
   @apply flex-1;
 }
-
 .toast-close-button {
   @apply p-1 rounded-full hover:bg-gray-100 text-gray-500;
 }
 
-/* Specific adjustments for the HTML structure */
-.main-content-wrapper {
-  @apply flex-1 p-6 md:p-8 space-y-6 max-w-7xl mx-auto w-full;
+/* Icon */
+.lucide {
+  @apply inline-block align-middle;
 }
