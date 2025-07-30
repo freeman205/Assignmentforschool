@@ -286,12 +286,13 @@ async function handleNewPasswordForm(event) {
   const newPassword = document.getElementById("newPassword").value
   const confirmNewPassword = document.getElementById("confirmNewPassword").value
   const email = sessionStorage.getItem("forgotPasswordEmail")
+  const otpCode = sessionStorage.getItem("forgotPasswordOtp") // 👈 Required
 
   if (newPassword !== confirmNewPassword) {
     displayMessage("message", "Passwords do not match.", false)
     return
   }
-  if (!email) {
+  if (!email || !otpCode) {
     displayMessage("message", "Session expired or invalid. Please restart password reset.", false)
     setTimeout(() => (window.location.href = "../forgot-password"), 2000)
     return
@@ -300,23 +301,18 @@ async function handleNewPasswordForm(event) {
   try {
     await apiCall("/auth/reset-password", "POST", {
       email,
-      new_password: newPassword,
+      otp_code: otpCode, // 👈 Send the OTP
+      new_password: newPassword
     })
     displayMessage("message", "Password reset successfully!", true)
     sessionStorage.removeItem("forgotPasswordEmail")
+    sessionStorage.removeItem("forgotPasswordOtp")
     setTimeout(() => (window.location.href = "index.html"), 1500)
   } catch (error) {
     displayMessage("message", error.message || "Failed to reset password.", false)
   }
 }
-
-  // Backend needs an endpoint like: POST /api/auth/reset-password { email, otp_code, new_password }
-  // For now, this will simulate success.
-  displayMessage("message", "Password reset successfully! (Backend endpoint needed for full functionality)", true)
-  sessionStorage.removeItem("forgotPasswordEmail") // Clean up
-  setTimeout(() => (window.location.href = "index.html"), 1500)
-}
-
+  
 async function handlePinVerifyLoginForm(event) {
   event.preventDefault()
   clearMessage("message")
@@ -386,6 +382,7 @@ async function handleSetNewPinForm(event) {
   const newPin = document.getElementById("newPin").value
   const confirmNewPin = document.getElementById("confirmNewPin").value
   const email = sessionStorage.getItem("pinResetEmail")
+  const otpCode = sessionStorage.getItem("pinResetOtp") // 👈 Must be passed
 
   if (newPin !== confirmNewPin) {
     displayMessage("message", "PINs do not match.", false)
@@ -395,7 +392,7 @@ async function handleSetNewPinForm(event) {
     displayMessage("message", "PIN must be a 4-digit number.", false)
     return
   }
-  if (!email) {
+  if (!email || !otpCode) {
     displayMessage("message", "Session expired or invalid. Please restart PIN reset.", false)
     setTimeout(() => (window.location.href = "pin-reset.html"), 2000)
     return
@@ -404,10 +401,12 @@ async function handleSetNewPinForm(event) {
   try {
     await apiCall("/auth/reset-pin", "POST", {
       email,
-      new_pin: newPin,
+      otp_code: otpCode, // 👈 Send the OTP
+      new_pin: newPin
     })
     displayMessage("message", "New PIN set successfully!", true)
     sessionStorage.removeItem("pinResetEmail")
+    sessionStorage.removeItem("pinResetOtp")
     setTimeout(() => (window.location.href = "../pin-verify-login"), 1500)
   } catch (error) {
     displayMessage("message", error.message || "Failed to set new PIN.", false)
