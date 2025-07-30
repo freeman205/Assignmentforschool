@@ -33,7 +33,7 @@ document.addEventListener('click', (e) => {
   // Load wallet balance
   async function loadDashboardStats(accessToken) {
   try {
-    const res = await fetch(`/api/dashboard/stats`, {
+    const res = await fetch(`${apiUrl}/dashboard/stats`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json"
