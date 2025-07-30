@@ -485,4 +485,5 @@ actionSection.innerHTML = `
   }
 
   loadDashboardStats();
+  loadActivity();
 });
