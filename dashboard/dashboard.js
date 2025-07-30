@@ -33,7 +33,7 @@ document.addEventListener('click', (e) => {
   // Load wallet balance
   async function loadDashboardStats(accessToken) {
   try {
-    const res = await fetch(`${apiUrl}/dashboard/stats`, {
+    const res = await fetch(`/api/dashboard/stats`, {
       headers: { Authorization: `Bearer ${accessToken}` }
     });
 
@@ -45,7 +45,6 @@ document.addEventListener('click', (e) => {
     document.getElementById("completedSurveys").textContent = data.completed_surveys;
     document.getElementById("pendingRedemptions").textContent = data.pending_redemptions;
     document.getElementById("totalEarned").textContent = `${data.total_earned} pts`;
-
   } catch (err) {
     console.error("Dashboard stats error:", err);
     document.getElementById("walletBalance").textContent = "Error";
@@ -53,7 +52,16 @@ document.addEventListener('click', (e) => {
     document.getElementById("pendingRedemptions").textContent = "Error";
     document.getElementById("totalEarned").textContent = "Error";
   }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const accessToken = sessionStorage.getItem("accessToken");
+  console.log("Dashboard Token:", accessToken); // Optional debug
+
+  if (accessToken) {
+    loadDashboardStats(accessToken);
   }
+});
 
   // Section handler
   async function handleMenuAction(section) {
