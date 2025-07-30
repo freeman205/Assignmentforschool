@@ -31,7 +31,12 @@ document.addEventListener('click', (e) => {
   });
 
   // Load wallet balance
-  async function loadDashboardStats() {
+  async function loadDashboardStats(accessToken) {
+  if (!accessToken) {
+    console.warn("No access token found");
+    return;
+  }
+
   try {
     const res = await fetch(`${apiUrl}/dashboard/stats`, {
       headers: { Authorization: `Bearer ${accessToken}` }
@@ -41,12 +46,10 @@ document.addEventListener('click', (e) => {
 
     const data = await res.json();
 
-    // Set stats dynamically in points
     document.getElementById("walletBalance").textContent = `${data.points_balance} pts`;
     document.getElementById("completedSurveys").textContent = data.completed_surveys;
     document.getElementById("pendingRedemptions").textContent = data.pending_redemptions;
     document.getElementById("totalEarned").textContent = `${data.total_earned} pts`;
-
   } catch (err) {
     console.error("Dashboard stats error:", err);
     document.getElementById("walletBalance").textContent = "Error";
