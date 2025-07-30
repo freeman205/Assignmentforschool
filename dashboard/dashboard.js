@@ -448,5 +448,41 @@ actionSection.innerHTML = `
   });
   }
 
+  async function loadActivity() {
+  try {
+    const res = await fetch(`${apiUrl}/dashboard/activity`, {
+      headers: { Authorization: `Bearer ${accessToken}` }
+    });
+    const data = await res.json();
+
+    const activitySection = document.getElementById('activityFeed');
+
+    activitySection.innerHTML = `
+      <h3 class="text-lg font-bold mb-2">🕒 Recent Activity</h3>
+      <ul class="space-y-2">
+        ${data.map(item => {
+          let emoji = '🔔';
+          if (item.type === 'survey') emoji = '✅';
+          else if (item.type === 'redeem') emoji = '💳';
+          else if (item.type === 'transfer') emoji = '📤';
+          else if (item.type === 'referral') emoji = '📥';
+
+          return `
+            <li class="text-sm text-gray-700">
+              ${emoji} ${item.message} <br>
+              <span class="text-xs text-gray-500">${new Date(item.timestamp).toLocaleString()}</span>
+            </li>
+          `;
+        }).join('')}
+      </ul>
+    `;
+  } catch (err) {
+    console.error('Failed to load activity feed:', err);
+    document.getElementById('activityFeed').innerHTML = `
+      <p class="text-sm text-red-500">Unable to load activity feed.</p>
+    `;
+  }
+  }
+
   loadDashboardStats();
 });
