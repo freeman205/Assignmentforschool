@@ -34,7 +34,10 @@ document.addEventListener('click', (e) => {
   async function loadDashboardStats(accessToken) {
   try {
     const res = await fetch(`/api/dashboard/stats`, {
-      headers: { Authorization: `Bearer ${accessToken}` }
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json"
+      }
     });
 
     if (!res.ok) throw new Error("Stats error");
@@ -56,7 +59,6 @@ document.addEventListener('click', (e) => {
 
 document.addEventListener("DOMContentLoaded", () => {
   const accessToken = sessionStorage.getItem("accessToken");
-  console.log("Dashboard Token:", accessToken); // Optional debug
 
   if (accessToken) {
     loadDashboardStats(accessToken);
