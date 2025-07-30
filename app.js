@@ -297,6 +297,19 @@ async function handleNewPasswordForm(event) {
     return
   }
 
+  try {
+    await apiCall("/auth/reset-password", "POST", {
+      email,
+      new_password: newPassword,
+    })
+    displayMessage("message", "Password reset successfully!", true)
+    sessionStorage.removeItem("forgotPasswordEmail")
+    setTimeout(() => (window.location.href = "index.html"), 1500)
+  } catch (error) {
+    displayMessage("message", error.message || "Failed to reset password.", false)
+  }
+}
+
   // Backend needs an endpoint like: POST /api/auth/reset-password { email, otp_code, new_password }
   // For now, this will simulate success.
   displayMessage("message", "Password reset successfully! (Backend endpoint needed for full functionality)", true)
@@ -372,7 +385,7 @@ async function handleSetNewPinForm(event) {
 
   const newPin = document.getElementById("newPin").value
   const confirmNewPin = document.getElementById("confirmNewPin").value
-  const email = sessionStorage.getItem("pinResetEmail") // Email from the reset flow
+  const email = sessionStorage.getItem("pinResetEmail")
 
   if (newPin !== confirmNewPin) {
     displayMessage("message", "PINs do not match.", false)
@@ -388,11 +401,17 @@ async function handleSetNewPinForm(event) {
     return
   }
 
-  // Backend needs an endpoint like: POST /api/auth/reset-pin { email, otp_code, new_pin }
-  // For now, this will simulate success.
-  displayMessage("message", "New PIN set successfully! (Backend endpoint needed for full functionality)", true)
-  sessionStorage.removeItem("pinResetEmail") // Clean up
-  setTimeout(() => (window.location.href = "../pin-verify-login"), 1500)
+  try {
+    await apiCall("/auth/reset-pin", "POST", {
+      email,
+      new_pin: newPin,
+    })
+    displayMessage("message", "New PIN set successfully!", true)
+    sessionStorage.removeItem("pinResetEmail")
+    setTimeout(() => (window.location.href = "../pin-verify-login"), 1500)
+  } catch (error) {
+    displayMessage("message", error.message || "Failed to set new PIN.", false)
+  }
 }
 
 // --- Event Listeners ---
