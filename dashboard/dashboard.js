@@ -28,14 +28,16 @@ document.addEventListener("DOMContentLoaded", () => {
     })
   })
 
-  // ✅ Load surveys after DOM is ready
+  // ✅ Your original functions continue here...
+
+  // Call loadSurveys using accessToken if available
   const accessToken = sessionStorage.getItem("accessToken")
   if (accessToken) {
     loadSurveys(accessToken)
   } else {
     console.warn("No access token found")
   }
-}) // 👈 this closes the DOMContentLoaded function
+})
 
   // Load wallet balance and other dashboard stats
   async function loadDashboardStats(accessToken) {
