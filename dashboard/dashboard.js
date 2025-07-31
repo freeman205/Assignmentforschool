@@ -320,35 +320,38 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function loadSurveys(accessToken) {
-    const surveyList = document.getElementById("surveyList")
-    if (!surveyList) {
-      console.error("HTML element with ID 'surveyList' not found. Cannot load surveys.")
-      return
+  const surveyList = document.getElementById("surveyList");
+  if (!surveyList) {
+    console.error("HTML element with ID 'surveyList' not found. Cannot load surveys.");
+    return;
+  }
+
+  console.log("Calling /surveys/available with token:", accessToken); // Debug log
+
+  try {
+    const res = await fetch(`${apiUrl}/surveys/available`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({ message: res.statusText }));
+      console.error("Survey fetch error:", res.status, errorData);
+      throw new Error(`Survey fetch error: ${errorData.detail || errorData.message}`);
     }
-    try {
-      const res = await fetch(`${apiUrl}/surveys/available`, {
-        // Corrected endpoint to /api/surveys
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      })
 
-      if (!res.ok) {
-        const errorData = await res.json().catch(() => ({ message: res.statusText }))
-        console.error("Survey fetch error:", res.status, errorData)
-        throw new Error(`Survey fetch error: ${errorData.detail || errorData.message}`)
-      }
+    const data = await res.json();
+    console.log("Surveys data received:", data); // Debug log
 
-      const data = await res.json()
+    if (!Array.isArray(data) || data.length === 0) {
+      surveyList.innerHTML = `<p class="text-gray-500">No surveys available at the moment.</p>`;
+      return;
+    }
 
-      if (!Array.isArray(data) || data.length === 0) {
-        surveyList.innerHTML = `<p class="text-gray-500">No surveys available at the moment.</p>`
-        return
-      }
-
-      surveyList.innerHTML = data
-        .map((survey) => {
-          return `
+    surveyList.innerHTML = data
+      .map((survey) => {
+        return `
           <div class="border p-4 rounded hover:shadow-md">
             <h4 class="font-semibold">${survey.title}</h4>
             <p class="text-sm text-gray-500 mb-2">${survey.description || "No description"}</p>
@@ -357,13 +360,13 @@ document.addEventListener("DOMContentLoaded", () => {
               Take Survey
             </a>
           </div>
-        `
-        })
-        .join("")
-    } catch (err) {
-      console.error("Failed to load surveys:", err)
-      surveyList.innerHTML = `<p class="text-red-500">Failed to load surveys. Please try again later.</p>`
-    }
+        `;
+      })
+      .join("");
+  } catch (err) {
+    console.error("Failed to load surveys:", err);
+    surveyList.innerHTML = `<p class="text-red-500">Failed to load surveys. Please try again later.</p>`;
+  }
   }
 
   async function loadRedemptionHistory(accessToken) {
