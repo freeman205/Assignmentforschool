@@ -35,7 +35,6 @@ document.addEventListener("DOMContentLoaded", () => {
   } else {
     console.warn("No access token found")
   }
-})
 
   // Load wallet balance and other dashboard stats
   async function loadDashboardStats(accessToken) {
