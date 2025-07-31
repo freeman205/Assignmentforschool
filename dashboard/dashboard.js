@@ -28,6 +28,15 @@ document.addEventListener("DOMContentLoaded", () => {
     })
   })
 
+  // ✅ Load surveys after DOM is ready
+  const accessToken = sessionStorage.getItem("accessToken")
+  if (accessToken) {
+    loadSurveys(accessToken)
+  } else {
+    console.warn("No access token found")
+  }
+})
+
   // Load wallet balance and other dashboard stats
   async function loadDashboardStats(accessToken) {
     try {
