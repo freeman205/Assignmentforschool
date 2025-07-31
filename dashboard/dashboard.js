@@ -541,39 +541,38 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function loadPinForm(accessToken) {
-    actionSection.innerHTML = `
-      <div class="bg-white p-6 rounded-lg shadow">
-        <h3 class="text-lg font-bold mb-4">Change PIN</h3>
-        <form id="pinForm" class="space-y-4">
-          <input type="password" name="old_pin" placeholder="Old PIN" class="w-full border p-2 rounded" required />
-          <input type="password" name="new_pin" placeholder="New PIN" class="w-full border p-2 rounded" required />
-          <button class="bg-purple-600 text-white px-4 py-2 rounded">Change</button>
-        </form>
-      </div>
-    `
+  actionSection.innerHTML = `
+    <div class="bg-white p-6 rounded-lg shadow">
+      <h3 class="text-lg font-bold mb-4">Change PIN</h3>
+      <form id="pinForm" class="space-y-4">
+        <input type="password" name="old_pin" placeholder="Old PIN" class="w-full border p-2 rounded" required />
+        <input type="password" name="new_pin" placeholder="New PIN" class="w-full border p-2 rounded" required />
+        <button class="bg-purple-600 text-white px-4 py-2 rounded">Change</button>
+      </form>
+    </div>
+  `
 
-    document.getElementById("pinForm").addEventListener("submit", async (e) => {
-      e.preventDefault()
-      const form = e.target
-      const payload = {
-        current_pin: form.old_pin.value,
-        new_pin: form.new_pin.value,
-      }
+  document.getElementById("pinForm").addEventListener("submit", async (e) => {
+    e.preventDefault()
+    const form = e.target
+    const payload = {
+      current_pin: form.old_pin.value,
+      new_pin: form.new_pin.value,
+    }
 
-      try {
-        const res = await fetch(`${apiUrl}/users/change-pin`, {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(payload),
-        })
-        const data = await res.json()
-        alert(res.ok ? data.message : data.detail || "PIN change failed")
-      } catch {
-        alert("PIN error")
-      }
-    })
-  }
-})
+    try {
+      const res = await fetch(`${apiUrl}/users/change-pin`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      })
+      const data = await res.json()
+      alert(res.ok ? data.message : data.detail || "PIN change failed")
+    } catch {
+      alert("PIN error")
+    }
+  })
+}  // ✅ This is the correct closing brace for loadPinForm
