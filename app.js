@@ -366,7 +366,12 @@ async function handlePinResetOtpVerifyForm(event) {
   }
 
   try {
-    await apiCall("/auth/verify-otp", "POST", { email, otp_code: otpCode, purpose: "pin_reset" })
+    await apiCall("/auth/verify-otp", "POST", {
+      email,
+      otp_code: otpCode,
+      purpose: "pin_reset"
+    })
+    sessionStorage.setItem("pinResetOtp", otpCode)  // ✅ Fix applied here
     displayMessage("message", "OTP verified. Redirecting to set new PIN...", true)
     setTimeout(() => {
       window.location.href = "../set-new-pin"
