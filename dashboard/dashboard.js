@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   const apiUrl = "https://dansog-backend.onrender.com/api"
+  const accessToken = sessionStorage.getItem("accessToken")
   const currentUser = JSON.parse(sessionStorage.getItem("currentUser"))
 
   const menuToggle = document.getElementById("menuToggle")
@@ -28,8 +29,11 @@ document.addEventListener("DOMContentLoaded", () => {
     })
   })
 
-  // 👉 Call external surveys loader here
+  // ✅ Auto-load dashboard data
   if (accessToken) {
+    loadWalletBalance(accessToken)
+    loadStats(accessToken)
+    loadActivity(accessToken)
     loadSurveys(accessToken)
   }
 })
