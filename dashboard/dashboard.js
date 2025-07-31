@@ -28,6 +28,12 @@ document.addEventListener("DOMContentLoaded", () => {
     })
   })
 
+  // 👉 Call external surveys loader here
+  if (accessToken) {
+    loadSurveys(accessToken)
+  }
+})
+
   // Load wallet balance and other dashboard stats
   async function loadDashboardStats(accessToken) {
     try {
