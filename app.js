@@ -270,6 +270,7 @@ async function handleForgotPasswordOtpVerifyForm(event) {
 
   try {
     await apiCall("/auth/verify-otp", "POST", { email, otp_code: otpCode, purpose: "password_reset" })
+    sessionStorage.setItem("forgotPasswordOtp", otpCode) // ✅ Fix: store OTP for next step
     displayMessage("message", "OTP verified. Redirecting to set new password...", true)
     setTimeout(() => {
       window.location.href = "../new-password"
@@ -286,7 +287,7 @@ async function handleNewPasswordForm(event) {
   const newPassword = document.getElementById("newPassword").value
   const confirmNewPassword = document.getElementById("confirmNewPassword").value
   const email = sessionStorage.getItem("forgotPasswordEmail")
-  const otpCode = sessionStorage.getItem("forgotPasswordOtp") // 👈 Required
+  const otpCode = sessionStorage.getItem("forgotPasswordOtp") // ✅ Now this won't be null
 
   if (newPassword !== confirmNewPassword) {
     displayMessage("message", "Passwords do not match.", false)
@@ -301,7 +302,7 @@ async function handleNewPasswordForm(event) {
   try {
     await apiCall("/auth/reset-password", "POST", {
       email,
-      otp_code: otpCode, // 👈 Send the OTP
+      otp_code: otpCode,
       new_password: newPassword
     })
     displayMessage("message", "Password reset successfully!", true)
