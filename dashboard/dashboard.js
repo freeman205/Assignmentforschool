@@ -328,8 +328,8 @@ document.addEventListener("DOMContentLoaded", () => {
       return
     }
     try {
-      console.log("Fetching surveys from:", `${apiUrl}/surveys`) // Added log
-      const res = await fetch(`${apiUrl}/surveys`, {
+      console.log("Fetching surveys from:", `${apiUrl}/surveys/available`) // Added log
+      const res = await fetch(`${apiUrl}/surveys/available`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
