@@ -326,7 +326,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return
     }
     try {
-      const res = await fetch(`${apiUrl}/surveys`, {
+      const res = await fetch(`${apiUrl}/surveys/available`, {
         // Corrected endpoint to /api/surveys
         headers: {
           Authorization: `Bearer ${accessToken}`,
