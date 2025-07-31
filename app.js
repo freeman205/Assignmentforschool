@@ -308,7 +308,7 @@ async function handleNewPasswordForm(event) {
     displayMessage("message", "Password reset successfully!", true)
     sessionStorage.removeItem("forgotPasswordEmail")
     sessionStorage.removeItem("forgotPasswordOtp")
-    setTimeout(() => (window.location.href = "index.html"), 1500)
+    setTimeout(() => (window.location.href = "/login"), 1500)
   } catch (error) {
     displayMessage("message", error.message || "Failed to reset password.", false)
   }
