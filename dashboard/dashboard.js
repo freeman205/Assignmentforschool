@@ -310,6 +310,47 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  async function loadSurveys(accessToken) {
+  const surveyList = document.getElementById("surveyList");
+  try {
+    const res = await fetch(`${apiUrl}/surveys/available`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => ({ message: res.statusText }));
+      throw new Error(`Survey fetch error: ${errorData.detail || errorData.message}`);
+    }
+
+    const data = await res.json();
+
+    if (!Array.isArray(data) || data.length === 0) {
+      surveyList.innerHTML = `<p class="text-gray-500">No surveys available at the moment.</p>`;
+      return;
+    }
+
+    surveyList.innerHTML = data
+      .map((survey) => {
+        return `
+          <div class="border p-4 rounded hover:shadow-md">
+            <h4 class="font-semibold">${survey.title}</h4>
+            <p class="text-sm text-gray-500 mb-2">${survey.description || "No description"}</p>
+            <p class="text-sm mb-2">Reward: <strong>${survey.points_reward} pts</strong></p>
+            <a href="${survey.redirect_url}" target="_blank" class="inline-block mt-2 text-sm px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition">
+              Take Survey
+            </a>
+          </div>
+        `;
+      })
+      .join("");
+  } catch (err) {
+    console.error("Failed to load surveys:", err);
+    surveyList.innerHTML = `<p class="text-red-500">Failed to load surveys. Please try again later.</p>`;
+  }
+  }
+
   async function loadRedemptionHistory(accessToken) {
     try {
       const res = await fetch(`${apiUrl}/redemption/history`, {
