@@ -300,7 +300,7 @@ async function handleNewPasswordForm(event) {
   }
 
   try {
-    await apiCall("auth/reset-password", "POST", {
+    await apiCall("/auth/reset-password", "POST", {
       email,
       otp_code: otpCode,
       new_password: newPassword
@@ -405,7 +405,7 @@ async function handleSetNewPinForm(event) {
   }
 
   try {
-    await apiCall("auth/reset-pin", "POST", {
+    await apiCall("/auth/reset-pin", "POST", {
       email,
       otp_code: otpCode, // 👈 Send the OTP
       new_pin: newPin
