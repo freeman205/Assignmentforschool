@@ -120,6 +120,7 @@ document.addEventListener("DOMContentLoaded", () => {
   if (accessToken) {
     loadDashboardStats(accessToken)
     loadActivity(accessToken)
+    loadSurveys(accessToken)
   } else {
     console.warn("No access token found. User might not be logged in. Dashboard stats and activity will not load.")
   }
